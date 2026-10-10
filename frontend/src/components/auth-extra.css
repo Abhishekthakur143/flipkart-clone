@@ -1,0 +1,46 @@
+.auth-layout {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #eef3ff 0%, #f8fafc 50%, #eaf1ff 100%);
+}
+.auth-layout::before,
+.auth-layout::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.auth-layout::before {
+  width: 420px; height: 420px;
+  top: -120px; left: -100px;
+  background: #2874f0;
+  opacity: 0.45;
+  animation: authLayoutFloat 14s ease-in-out infinite;
+}
+.auth-layout::after {
+  width: 380px; height: 380px;
+  bottom: -120px; right: -80px;
+  background: #fb641b;
+  opacity: 0.28;
+  animation: authLayoutFloat 18s ease-in-out infinite reverse;
+}
+.auth-layout > * { position: relative; z-index: 1; }
+
+@keyframes authLayoutFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, 20px) scale(1.08); }
+}
+
+.dark .auth-layout { background: linear-gradient(135deg, #0b1020 0%, #0f172a 50%, #0b1226 100%); }
+.dark .auth-layout::before { opacity: 0.3; }
+.dark .auth-layout::after { opacity: 0.15; }
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-layout::before, .auth-layout::after { animation: none; }
+}

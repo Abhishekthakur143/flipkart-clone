@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  body {
+    @apply bg-flipkart-bg text-flipkart-dark antialiased;
+  }
+  /* Standard CSS use karenge, @apply se VS Code error deta hai */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+}
+ 
+@layer components {
+  .btn-primary {
+    @apply bg-flipkart-blue text-white px-8 py-3 rounded-sm font-medium 
+           hover:bg-flipkart-darkBlue transition-all duration-200 
+           active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+ 
+  .btn-secondary {
+    @apply bg-flipkart-orange text-white px-8 py-3 rounded-sm font-medium 
+           hover:bg-orange-600 transition-all duration-200 
+           active:scale-[0.98];
+  }
+ 
+  .btn-outline {
+    @apply border-2 border-flipkart-blue text-flipkart-blue px-8 py-3 rounded-sm 
+           font-medium hover:bg-flipkart-blue hover:text-white 
+           transition-all duration-200;
+  }
+ 
+  .btn-white {
+    @apply bg-white text-flipkart-blue px-8 py-3 rounded-sm font-medium 
+           hover:bg-gray-50 transition-all duration-200 shadow-sm;
+  }
+ 
+  .card {
+    @apply bg-white rounded-sm shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+ 
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-sm 
+           focus:outline-none focus:border-flipkart-blue focus:ring-1 
+           focus:ring-flipkart-blue transition-all duration-200;
+  }
+ 
+  .section-title {
+    @apply text-lg md:text-xl font-bold text-flipkart-dark flex items-center justify-between;
+  }
+ 
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+  }
+ 
+  .nav-link {
+    @apply text-gray-700 hover:text-flipkart-blue transition-colors duration-200 font-medium;
+  }
+ 
+  /* Skeleton loading */
+  .skeleton {
+    @apply bg-gray-200 animate-pulse rounded;
+  }
+ 
+  /* Flipkart style divider */
+  .divider {
+    @apply w-full h-[1px] bg-gray-200;
+  }
+ 
+  /* Product card hover effect */
+  .product-card {
+    @apply card cursor-pointer;
+  }
+ 
+  .product-card:hover .product-image {
+    @apply scale-105;
+  }
+ 
+  /* Scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+ 
+/* Rating stars color */
+.star-filled {
+  color: #ff9f00;
+}
+.star-empty {
+  color: #c0c0c0;
+}
+ 
+/* Toast customization */
+.toast-custom {
+  font-family: 'Inter', sans-serif;
+}
+ 
+/* ===== Premium dark theme (active when <html> has class "dark") ===== */
+.dark {
+  --d-bg: #0b0f17;
+  --d-surface: #121826;
+  --d-raised: #182033;
+  --d-line: rgba(255, 255, 255, 0.08);
+  --d-text: #e8ecf4;
+  --d-muted: #93a0b8;
+  --d-accent: #4d8dff;
+  color-scheme: dark;
+}
+.dark body {
+  background: radial-gradient(900px 500px at 85% -5%, rgba(77, 141, 255, 0.10), transparent 60%), var(--d-bg);
+  background-attachment: fixed;
+  color: var(--d-text);
+}
+/* header + category strip */
+.dark header.bg-flipkart-blue {
+  background: linear-gradient(90deg, #0d1f4a, #14346e 55%, #1a4690);
+  border-bottom: 1px solid var(--d-line);
+}
+.dark header .shadow-lg { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+.dark header .bg-white.shadow-sm {
+  background: rgba(18, 24, 38, 0.85);
+  backdrop-filter: blur(10px);
+  border-color: var(--d-line);
+}
+/* surfaces */
+.dark .bg-white,
+.dark .card,
+.dark .btn-white {
+  background-color: var(--d-surface);
+  border: 1px solid var(--d-line);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+.dark .card:hover,
+.dark .product-card:hover {
+  border-color: rgba(77, 141, 255, 0.45);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(77, 141, 255, 0.25);
+  transform: translateY(-3px);
+}
+.dark .card, .dark .product-card { transition: transform .2s, box-shadow .2s, border-color .2s; }
+.dark .bg-flipkart-bg, .dark .bg-gray-50 { background-color: var(--d-bg); }
+.dark .bg-gray-100, .dark .bg-gray-200, .dark .skeleton { background-color: var(--d-raised); }
+.dark .bg-blue-50 { background-color: rgba(77, 141, 255, 0.14); }
+.dark .bg-red-50 { background-color: rgba(255, 97, 97, 0.14); }
+.dark .hover\:bg-gray-50:hover { background-color: var(--d-raised); }
+.dark .hover\:bg-blue-50:hover { background-color: rgba(77, 141, 255, 0.14); }
+.dark .hover\:bg-red-50:hover { background-color: rgba(255, 97, 97, 0.14); }
+/* dropdown / popovers */
+.dark .shadow-xl { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65); }
+/* text */
+.dark .text-flipkart-dark, .dark .text-gray-900, .dark .text-gray-800, .dark .text-gray-700 { color: var(--d-text); }
+.dark .text-gray-600, .dark .text-gray-500, .dark .text-gray-400 { color: var(--d-muted); }
+.dark .section-title { color: #fff; letter-spacing: -0.01em; }
+.dark .hover\:text-flipkart-blue:hover { color: #7aa9ff; }
+.dark .text-flipkart-blue { color: #7aa9ff; }
+.dark header .text-flipkart-blue { color: #1e5fd6; }
+/* borders / dividers */
+.dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300, .dark .border-b, .dark .border-t { border-color: var(--d-line); }
+.dark .divider { background-color: var(--d-line); }
+/* inputs */
+.dark .input-field { background-color: var(--d-raised); border-color: rgba(255, 255, 255, 0.14); }
+.dark .input-field:focus { border-color: var(--d-accent); box-shadow: 0 0 0 3px rgba(77, 141, 255, 0.25); }
+.dark input, .dark textarea, .dark select { color: var(--d-text); }
+.dark input::placeholder, .dark textarea::placeholder { color: #7a879f; }
+.dark header input { background-color: #fff; color: #1b2433; }
+.dark header input::placeholder { color: #6b778c; }
+/* buttons */
+.dark .btn-primary {
+  background: linear-gradient(180deg, #4d8dff, #2f6ee6);
+  box-shadow: 0 8px 22px rgba(47, 110, 230, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.dark .btn-primary:hover { box-shadow: 0 12px 30px rgba(47, 110, 230, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.dark .btn-secondary {
+  background: linear-gradient(180deg, #ff7d3b, #fb641b);
+  box-shadow: 0 8px 22px rgba(251, 100, 27, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.dark .btn-outline { border-color: #4d8dff; color: #7aa9ff; }
+.dark .btn-outline:hover { background-color: #4d8dff; color: #fff; }
+.dark .bg-flipkart-blue:not(header) { background: linear-gradient(180deg, #4d8dff, #2f6ee6); }
+/* images: soften the white photo backgrounds, round them */
+.dark img { border-radius: 10px; }
+.dark .product-card img, .dark .card img { filter: brightness(0.94) contrast(1.03); }
+/* ratings, prices */
+.dark .star-empty { color: #475068; }
+.dark .text-green-600, .dark .text-flipkart-green { color: #4cd37b; }
+/* scrollbars */
+.dark ::-webkit-scrollbar { width: 10px; height: 8px; }
+.dark ::-webkit-scrollbar-track { background: var(--d-bg); }
+.dark ::-webkit-scrollbar-thumb { background: #2a3550; border-radius: 8px; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #3a4a70; }
+.dark ::selection { background: rgba(77, 141, 255, 0.45); color: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  .dark .card, .dark .product-card { transition: none; }
+  .dark .card:hover, .dark .product-card:hover { transform: none; }
+}

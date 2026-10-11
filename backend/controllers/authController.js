@@ -38,9 +38,8 @@ exports.registerUser = async (req, res, next) => {
         `,
       });
     } catch (error) {
-      user.otp = undefined;
-      user.otpExpire = undefined;
-      await user.save({ validateBeforeSave: false });
+      console.error('OTP email failed:', error.message);
+      await User.findByIdAndDelete(user._id);
       return next(new ErrorHandler('Error sending OTP email', 500));
     }
 

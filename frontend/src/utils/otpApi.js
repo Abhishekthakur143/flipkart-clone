@@ -1,5 +1,5 @@
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1').replace(/\/v1\/?$/, '').replace(/\/$/, '');
 export async function otpPost(path, body) {
   const r = await fetch(`${API}/otp${path}`, {
     method: 'POST',

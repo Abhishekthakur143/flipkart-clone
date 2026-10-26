@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -23,9 +22,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
- 
-// Connect to database
-connectDB();
  
 const app = express();
  
@@ -56,6 +52,18 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+ 
+// Database: har request par connection ready hone ka wait karo (serverless ke liye zaroori).
+// CORS ke baad rakha hai, taaki DB fail hone par bhi browser ko CORS headers milein.
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('DB connect failed:', err.message);
+    res.status(503).json({ success: false, message: 'Database unavailable' });
+  }
+});
  
 // Routes
 app.use('/api/v1/auth', require('./routes/authRoutes'));

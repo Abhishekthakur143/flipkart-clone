@@ -1,5 +1,4 @@
-require('dns').setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
-require('dotenv').config();
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -10,6 +9,12 @@ const errorMiddleware = require('./middleware/error');
  
 // Load environment variables
 dotenv.config({ path: './.env' });
+ 
+// Local par kuch internet providers ka DNS Atlas ka "+srv" address resolve nahi karta (querySrv ECONNREFUSED).
+// Sirf development mein public DNS use karte hain. Render par iski zaroorat nahi.
+if (process.env.NODE_ENV !== 'production') {
+  require('dns').setServers(['8.8.8.8', '1.1.1.1']);
+}
  
 // Cloudinary configuration
 const cloudinary = require('cloudinary').v2;
@@ -32,8 +37,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 app.use(fileUpload({
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+  limits: { fileSize: 4 * 1024 * 1024 }, // 4MB max (Vercel ka request body limit 4.5MB hai)
   useTempFiles: true,
+  tempFileDir: '/tmp/', // Vercel par sirf /tmp likhne layak hai
 }));
  
 // CORS Configuration (FRONTEND_URL me comma laga ke ek se zyada URL de sakte ho)
@@ -77,15 +83,20 @@ app.get('/api/v1/health', (req, res) => {
 // Error middleware (must be last)
 app.use(errorMiddleware);
  
-const PORT = process.env.PORT || 5000;
+// Local / Render par server start karo. Vercel (serverless) par listen nahi hota, app export hota hai.
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
  
-const server = app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-});
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  });
  
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error(`Error: ${err.message}`);
-  server.close(() => process.exit(1));
-});
+  // Handle unhandled promise rejections
+  process.on('unhandledRejection', (err) => {
+    console.error(`Error: ${err.message}`);
+    server.close(() => process.exit(1));
+  });
+}
+ 
+module.exports = app;
  

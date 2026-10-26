@@ -114,6 +114,7 @@ const clearOtp = (order) => {
 };
  
 // ---------- Auth ----------
+// NOTE: route me ab use nahi hota (partner sirf admin banata hai). Chaaho to hata do.
 exports.register = async (req, res, next) => {
   try {
     const name = String(req.body.name || '').trim();
@@ -490,3 +491,99 @@ exports.assignOrder = async (req, res, next) => {
     next(e);
   }
 };
+ 
+// ---------- Admin: partner management (routes: /admin/partners*) ----------
+exports.createPartner = async (req, res, next) => {
+  try {
+    const name = String(req.body.name || '').trim();
+    const email = String(req.body.email || '').toLowerCase().trim();
+    const phone = String(req.body.phone || '').trim();
+    const password = String(req.body.password || '');
+    const { vehicleType, vehicleNumber, city } = req.body;
+ 
+    if (!name || !email || !phone || !password) return next(new ErrorHandler('Name, email, phone and password are required', 400));
+    if (!validator.isEmail(email)) return next(new ErrorHandler('Please enter a valid email', 400));
+    if (!/^[6-9]\d{9}$/.test(phone)) return next(new ErrorHandler('Enter a valid 10-digit mobile number', 400));
+    if (password.length < 6 || password.length > 72) return next(new ErrorHandler('Password must be 6 to 72 characters', 400));
+ 
+    if (await DeliveryPartner.findOne({ email })) {
+      return next(new ErrorHandler('A delivery partner already exists with this email', 400));
+    }
+    const partner = await DeliveryPartner.create({ name, email, phone, password, vehicleType, vehicleNumber, city });
+    res.status(201).json({ success: true, partner: partnerJSON(partner), message: 'Delivery partner created' });
+  } catch (e) {
+    next(e);
+  }
+};
+ 
+exports.updatePartner = async (req, res, next) => {
+  try {
+    const partner = await DeliveryPartner.findById(req.params.id);
+    if (!partner) return next(new ErrorHandler('Delivery partner not found', 404));
+ 
+    const { name, email, phone, vehicleType, vehicleNumber, city, isActive } = req.body;
+    if (name !== undefined) partner.name = String(name).trim();
+    if (email !== undefined) {
+      const em = String(email).toLowerCase().trim();
+      if (!validator.isEmail(em)) return next(new ErrorHandler('Please enter a valid email', 400));
+      if (em !== partner.email && (await DeliveryPartner.findOne({ email: em }))) {
+        return next(new ErrorHandler('Another partner already uses this email', 400));
+      }
+      partner.email = em;
+    }
+    if (phone !== undefined) {
+      const ph = String(phone).trim();
+      if (!/^[6-9]\d{9}$/.test(ph)) return next(new ErrorHandler('Enter a valid 10-digit mobile number', 400));
+      partner.phone = ph;
+    }
+    if (vehicleType !== undefined) partner.vehicleType = vehicleType;
+    if (vehicleNumber !== undefined) partner.vehicleNumber = vehicleNumber;
+    if (city !== undefined) partner.city = city;
+    if (isActive !== undefined) partner.isActive = !!isActive;
+ 
+    await partner.save();
+    res.json({ success: true, partner: { ...partnerJSON(partner), isActive: partner.isActive }, message: 'Partner updated' });
+  } catch (e) {
+    next(e);
+  }
+};
+ 
+exports.deletePartner = async (req, res, next) => {
+  try {
+    const partner = await DeliveryPartner.findById(req.params.id);
+    if (!partner) return next(new ErrorHandler('Delivery partner not found', 404));
+ 
+    const active = await Order.countDocuments({
+      'delivery.partner': partner._id,
+      'delivery.status': { $in: ACTIVE },
+      orderStatus: { $nin: CLOSED_ORDER },
+    });
+    if (active > 0) {
+      return next(new ErrorHandler(`Partner has ${active} active order(s). Reassign them first, or disable the partner instead.`, 400));
+    }
+    await partner.deleteOne();
+    res.json({ success: true, message: 'Delivery partner deleted' });
+  } catch (e) {
+    next(e);
+  }
+};
+ 
+exports.resetPartnerPassword = async (req, res, next) => {
+  try {
+    const newPassword = String(req.body.newPassword || req.body.password || '');
+    if (newPassword.length < 6 || newPassword.length > 72) {
+      return next(new ErrorHandler('Password must be 6 to 72 characters', 400));
+    }
+    const partner = await DeliveryPartner.findById(req.params.id).select('+password +loginAttempts +lockUntil');
+    if (!partner) return next(new ErrorHandler('Delivery partner not found', 404));
+ 
+    partner.password = newPassword; // model ka pre('save') hash karega (updatePassword bhi yehi karta hai)
+    partner.loginAttempts = 0;
+    partner.lockUntil = undefined; // locked account bhi unlock ho jaata hai
+    await partner.save();
+    res.json({ success: true, message: 'Password reset successful' });
+  } catch (e) {
+    next(e);
+  }
+};
+ 

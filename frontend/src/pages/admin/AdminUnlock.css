@@ -1,0 +1,441 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+/* Admin unlock page. Sab classes "au-" se shuru hote hain, baaki site ke CSS se takrate nahi. */
+.au-root {
+  --au-ink: #091238;
+  --au-ink-2: #12206a;
+  --au-blue: #2874f0;
+  --au-blue-dark: #1f5fcb;
+  --au-brass: #ffd23f;
+  --au-paper: #f5f6fb;
+  --au-text: #111936;
+  --au-muted: #586087;
+  --au-line: #d6dbee;
+  --au-red: #b4233b;
+  --au-green: #117a4d;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(320px, 5fr) minmax(0, 6fr);
+  background: var(--au-paper);
+  color: var(--au-text);
+  font-family: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.au-root *,
+.au-root *::before,
+.au-root *::after {
+  box-sizing: border-box;
+}
+
+/* ---------- Left: lock + headline ---------- */
+.au-side {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: clamp(24px, 4vw, 48px);
+  color: #fff;
+  background:
+    radial-gradient(120% 80% at 0% 0%, #1b31a0 0%, transparent 60%),
+    linear-gradient(160deg, var(--au-ink-2), var(--au-ink));
+}
+.au-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.au-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  background: var(--au-blue);
+  box-shadow: 0 6px 18px rgba(40, 116, 240, 0.45);
+}
+.au-brand b {
+  display: block;
+  font-family: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.1;
+}
+.au-brand small {
+  display: block;
+  opacity: 0.65;
+  font-size: 12.5px;
+}
+
+.au-lock {
+  display: block;
+  width: min(360px, 100%);
+  height: auto;
+}
+.au-housing {
+  fill: #0d1850;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.5;
+  transition: stroke 0.3s, filter 0.4s;
+}
+.au-open .au-housing {
+  stroke: var(--au-brass);
+  filter: drop-shadow(0 0 14px rgba(255, 210, 63, 0.35));
+}
+.au-plug {
+  fill: #0a1340;
+}
+.au-chamber {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.12);
+}
+.au-spring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.au-driver {
+  fill: #c9d4ff;
+}
+.au-key {
+  fill: #6c80cc;
+  transition: fill 0.3s;
+}
+.au-stack {
+  transform: translateY(var(--drop, 16px));
+  transition: transform 0.5s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.au-stack.on {
+  transform: translateY(0);
+}
+.au-stack.on .au-key {
+  fill: var(--au-brass);
+}
+.au-shear {
+  stroke: var(--au-brass);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+  opacity: 0.55;
+  transition: opacity 0.3s;
+}
+.au-open .au-shear {
+  stroke-dasharray: none;
+  opacity: 1;
+}
+
+.au-title {
+  margin: 0 0 8px;
+  font-family: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.au-lead {
+  margin: 0;
+  max-width: 36ch;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.au-checks {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.au-checks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.68);
+  transition: color 0.3s;
+}
+.au-checks li.done {
+  color: #fff;
+}
+.au-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  transition: background 0.3s, border-color 0.3s;
+}
+.au-checks .done .au-dot {
+  background: var(--au-brass);
+  border-color: var(--au-brass);
+}
+.au-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.au-note {
+  margin: auto 0 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Right: form ---------- */
+.au-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(24px, 5vw, 64px);
+}
+.au-panel {
+  width: min(440px, 100%);
+}
+.au-who {
+  margin: 0;
+  font-size: 14px;
+  color: var(--au-muted);
+}
+.au-who b {
+  color: var(--au-text);
+  font-weight: 600;
+}
+.au-form {
+  display: grid;
+  gap: 18px;
+}
+.au-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.au-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 6px 0 14px;
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 12px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.au-input:focus-within {
+  border-color: var(--au-blue);
+  box-shadow: 0 0 0 4px rgba(40, 116, 240, 0.16);
+}
+.au-input > svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--au-muted);
+}
+.au-input input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 16px; /* iOS zoom se bachne ke liye */
+  color: var(--au-text);
+  letter-spacing: 0.02em;
+}
+.au-eye {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--au-muted);
+  cursor: pointer;
+}
+.au-eye:hover {
+  background: var(--au-paper);
+  color: var(--au-text);
+}
+.au-eye svg {
+  width: 20px;
+  height: 20px;
+}
+.au-hint {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--au-muted);
+}
+.au-select {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1.5px solid var(--au-line);
+  border-radius: 12px;
+  background: #fff;
+  font: inherit;
+  font-size: 16px;
+  color: var(--au-text);
+}
+.au-select:focus-visible {
+  outline: 0;
+  border-color: var(--au-blue);
+  box-shadow: 0 0 0 4px rgba(40, 116, 240, 0.16);
+}
+
+.au-error {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid #f2bcc6;
+  border-radius: 12px;
+  background: #fdecef;
+  color: var(--au-red);
+  font-size: 14px;
+}
+.au-error[hidden] {
+  display: none;
+}
+.au-error svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+}
+
+.au-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 50px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--au-blue);
+  color: #fff;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, opacity 0.15s;
+}
+.au-btn:hover:not(:disabled) {
+  background: var(--au-blue-dark);
+}
+.au-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.au-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.au-btn.done {
+  background: var(--au-green);
+  opacity: 1;
+}
+.au-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.au-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.au-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 2px;
+  border: 0;
+  background: none;
+  color: var(--au-muted);
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.au-link:hover {
+  color: var(--au-text);
+}
+.au-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.au-root :focus-visible {
+  outline: 3px solid var(--au-blue);
+  outline-offset: 2px;
+}
+.au-input input:focus-visible {
+  outline: 0;
+}
+
+.au-boot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--au-muted);
+}
+.au-spin {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: au-rot 0.8s linear infinite;
+}
+.au-boot .au-spin {
+  border-color: var(--au-line);
+  border-top-color: var(--au-blue);
+}
+@keyframes au-rot {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 860px) {
+  .au-root {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .au-side {
+    gap: 18px;
+    padding: 22px 20px 26px;
+  }
+  .au-lock {
+    width: min(230px, 66%);
+  }
+  .au-lead {
+    max-width: none;
+  }
+  .au-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .au-note {
+    display: none;
+  }
+  .au-main {
+    align-items: flex-start;
+    padding: 24px 20px 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .au-root *,
+  .au-root *::before,
+  .au-root *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

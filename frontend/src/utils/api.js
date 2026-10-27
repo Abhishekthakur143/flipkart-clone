@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getUnlockToken, lockAdminPanel } from './adminUnlock';
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1',
@@ -11,6 +12,11 @@ API.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Admin panel unlock token (valid ho tabhi)
+    const unlock = getUnlockToken();
+    if (unlock) {
+      config.headers['X-Admin-Unlock'] = unlock;
     }
     return config;
   },
@@ -28,6 +34,10 @@ API.interceptors.response.use(
       if (!window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }
+    }
+    // Server ne kaha panel locked hai (token expire ho gaya ya galat hai): gate dobara dikhao
+    if (error.response?.status === 403 && error.response?.data?.code === 'ADMIN_LOCKED') {
+      lockAdminPanel();
     }
     return Promise.reject(error);
   }

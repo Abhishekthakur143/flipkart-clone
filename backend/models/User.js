@@ -72,6 +72,14 @@ const userSchema = new mongoose.Schema(
     otp: String,
     otpExpire: Date,
     otpAttempts: { type: Number, default: 0 },
+
+    // ---- Admin panel lock (password + code word + security answer) ----
+    // Hashes kabhi API response me nahi jaate (select: false).
+    adminCodeHash: { type: String, select: false },
+    adminAnswerHash: { type: String, select: false },
+    adminQuestion: { type: String, default: '', maxLength: 160 },
+    adminFailed: { type: Number, default: 0, select: false },
+    adminLockUntil: { type: Date, select: false },
   },
   { timestamps: true }
 );

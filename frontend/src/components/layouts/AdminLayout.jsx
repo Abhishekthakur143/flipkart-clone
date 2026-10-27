@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { HiOutlineMenu, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
+import { HiOutlineLockClosed, HiOutlineMenu, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
 import AdminSidebar from '../admin/AdminSidebar';
+import AdminGate from '../admin/AdminGate';
 import ProtectedRoute from '../ProtectedRoute';
+import { lockAdminPanel } from '../../utils/adminUnlock';
 import '../admin/admin.css';
 
 const AdminLayout = () => {
@@ -33,29 +35,34 @@ const AdminLayout = () => {
 
   return (
     <ProtectedRoute isAdmin={true}>
-      <div className="adm-shell">
-        <AdminSidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
-        <div className="adm-main">
-          <header className="adm-topbar">
-            <button className="adm-top-btn adm-menu-btn" onClick={() => setMenuOpen(true)} aria-label="Open menu">
-              <HiOutlineMenu />
-            </button>
-            <span className="adm-top-title">Admin Panel</span>
-            <div className="adm-top-right">
-              <button className="adm-top-btn" onClick={() => setIsDark((d) => !d)} aria-label="Toggle dark mode">
-                {isDark ? <HiOutlineSun /> : <HiOutlineMoon />}
+      <AdminGate>
+        <div className="adm-shell">
+          <AdminSidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
+          <div className="adm-main">
+            <header className="adm-topbar">
+              <button className="adm-top-btn adm-menu-btn" onClick={() => setMenuOpen(true)} aria-label="Open menu">
+                <HiOutlineMenu />
               </button>
-              <div className="adm-top-user">
-                <span className="adm-avatar">{user?.name?.charAt(0)?.toUpperCase() || 'A'}</span>
-                <b>{user?.name}</b>
+              <span className="adm-top-title">Admin Panel</span>
+              <div className="adm-top-right">
+                <button className="adm-top-btn" onClick={lockAdminPanel} aria-label="Lock admin panel" title="Lock admin panel">
+                  <HiOutlineLockClosed />
+                </button>
+                <button className="adm-top-btn" onClick={() => setIsDark((d) => !d)} aria-label="Toggle dark mode">
+                  {isDark ? <HiOutlineSun /> : <HiOutlineMoon />}
+                </button>
+                <div className="adm-top-user">
+                  <span className="adm-avatar">{user?.name?.charAt(0)?.toUpperCase() || 'A'}</span>
+                  <b>{user?.name}</b>
+                </div>
               </div>
+            </header>
+            <div className="adm-content">
+              <Outlet />
             </div>
-          </header>
-          <div className="adm-content">
-            <Outlet />
           </div>
         </div>
-      </div>
+      </AdminGate>
     </ProtectedRoute>
   );
 };

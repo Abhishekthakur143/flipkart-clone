@@ -53,23 +53,23 @@ const isDeliveryApp = import.meta.env.VITE_APP_MODE === 'delivery';
 function App() {
   return (
     <>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#333',
-            color: '#fff',
-            fontSize: '14px',
-          },
-          success: {
-            style: { background: '#388e3c' },
-          },
-          error: {
-            style: { background: '#ff6161' },
-          },
-        }}
-      />
+     <Toaster
+  position="top-right"
+  toastOptions={{
+    duration: 3000,
+    style: {
+      background: 'rgba(20,26,46,0.78)',
+      color: '#fff',
+      fontSize: '14px',
+      backdropFilter: 'blur(16px)',
+      border: '1px solid rgba(255,255,255,0.18)',
+      borderRadius: '999px',
+      padding: '10px 18px',
+    },
+    success: { style: { background: 'rgba(34,139,60,0.82)' } },
+    error: { style: { background: 'rgba(220,60,60,0.82)' } },
+  }}
+/>
       <ScrollToTop />
       <Suspense fallback={<Loading />}>
         <AnimatePresence mode="wait">

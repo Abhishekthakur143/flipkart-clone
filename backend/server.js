@@ -78,7 +78,11 @@ app.use('/api/v1/wishlist', require('./routes/wishlistRoutes'));
 app.use('/api/v1/admin', require('./routes/adminRoutes'));
 app.use('/api/v1/manager', require('./routes/managerRoutes'));
 app.use('/api/v1/partner-requests', require('./routes/partnerRequestRoutes'));
+app.use('/api/v1/seller', require('./routes/sellerRoutes'));
+app.use('/api/v1/deals', require('./routes/dealRoutes'));
 app.use('/api/v1/otp', require('./routes/otpRoutes'));
+app.use('/api/v1/seller', require('./routes/sellerRoutes'));
+app.use('/api/v1/deals', require('./routes/dealRoutes'));
 // Delivery partner dashboard
 app.use('/api/v1/delivery', require('./routes/deliveryRoutes'));
 

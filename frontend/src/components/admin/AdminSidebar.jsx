@@ -37,7 +37,7 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
   // Delivery menu: hidden until the admin has CONFIRMED at least one order
   const [ready, setReady] = useState(0);   // confirmed, waiting for a delivery partner
   const [moving, setMoving] = useState(0); // already with a delivery partner
-  const [approvals, setApprovals] = useState(0); // manager ne bheje, admin ke yes/no baaki
+  const [approvals, setApprovals] = useState({ partners: 0, deals: 0 }); // manager ne bheje, admin ke yes/no baaki
 
   const loadCounts = useCallback(async () => {
     try {
@@ -56,7 +56,13 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
     }
     try {
       const { data } = await API.get('/partner-requests/admin/count');
-      setApprovals(data.pending || 0);
+      setApprovals((a) => ({ ...a, partners: data.pending || 0 }));
+    } catch {
+      /* keep the previous state */
+    }
+    try {
+      const { data } = await API.get('/deals/admin/count');
+      setApprovals((a) => ({ ...a, deals: data.pending || 0 }));
     } catch {
       /* keep the previous state */
     }
@@ -79,7 +85,7 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
       : path.startsWith(p) || (p === '/admin/products' && path.startsWith('/admin/product/'));
 
   // Approvals Dashboard ke just neeche (Phase 3 me product deals bhi yahin aayengi)
-  const all = [menuItems[0], { name: 'Approvals', path: '/admin/approvals', icon: HiOutlineBadgeCheck, badge: approvals }, ...menuItems.slice(1)];
+  const all = [menuItems[0], { name: 'Approvals', path: '/admin/approvals', icon: HiOutlineBadgeCheck, badge: approvals.partners + approvals.deals }, ...menuItems.slice(1)];
   const items = showDelivery
     ? [...all.slice(0, 4), { name: 'Deliveries', path: '/admin/deliveries', icon: HiOutlineTruck, badge: ready }, ...all.slice(4)]
     : all;

@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useDispatch, useSelector } from 'react-redux';
 import {
   HiOutlineHome, HiOutlineClipboardList, HiOutlineUserAdd, HiOutlineLogout, HiOutlineMenu,
-  HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft,
+  HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft, HiOutlineUsers, HiOutlineTag,
 } from 'react-icons/hi';
 import { logout } from '../../redux/slices/authSlice';
 import API from '../../utils/api';
@@ -16,6 +16,8 @@ const MENU = [
   { name: 'Dashboard', path: '/manager', icon: HiOutlineHome, end: true },
   { name: 'Orders & Delivery', path: '/manager/orders', icon: HiOutlineClipboardList },
   { name: 'Partner requests', path: '/manager/partner-requests', icon: HiOutlineUserAdd, badge: 'requests' },
+  { name: 'Sellers', path: '/manager/sellers', icon: HiOutlineUsers, badge: 'sellers' },
+  { name: 'Seller deals', path: '/manager/deals', icon: HiOutlineTag, badge: 'deals' },
 ];
 
 const ManagerLayout = () => {
@@ -25,6 +27,8 @@ const ManagerLayout = () => {
   const { user } = useSelector((state) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
   const [pending, setPending] = useState(0); // naye partner applications jo review baaki hain
+  const [sellerPending, setSellerPending] = useState(0); // verification review baaki
+  const [dealPending, setDealPending] = useState(0); // deals jin par manager ka jawab baaki
   const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark');
 
   useEffect(() => {
@@ -37,6 +41,14 @@ const ManagerLayout = () => {
     try {
       const { data } = await API.get('/partner-requests/manager/count');
       setPending(data.pending || 0);
+    } catch { /* purani value rehne do */ }
+    try {
+      const { data } = await API.get('/seller/manager/count');
+      setSellerPending(data.pending || 0);
+    } catch { /* purani value rehne do */ }
+    try {
+      const { data } = await API.get('/deals/manager/count');
+      setDealPending(data.pending || 0);
     } catch { /* purani value rehne do */ }
   }, []);
   useEffect(() => { loadBadge(); }, [loadBadge, location.pathname]);
@@ -70,6 +82,8 @@ const ManagerLayout = () => {
                 className={({ isActive }) => `adm-link ${isActive ? 'on' : ''}`}>
                 <m.icon /> {m.name}
                 {m.badge === 'requests' && pending > 0 && <span className="mg-badge-btn">{pending}</span>}
+                {m.badge === 'sellers' && sellerPending > 0 && <span className="mg-badge-btn">{sellerPending}</span>}
+                {m.badge === 'deals' && dealPending > 0 && <span className="mg-badge-btn">{dealPending}</span>}
               </NavLink>
             ))}
           </nav>

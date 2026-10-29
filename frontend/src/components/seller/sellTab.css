@@ -1,0 +1,16 @@
+.sell-tab{position:fixed;right:0;top:50%;z-index:900;display:flex;align-items:stretch;transform:translate(calc(100% - 30px),-50%);transition:transform .28s ease;filter:drop-shadow(0 6px 18px rgba(0,0,0,.22))}
+.sell-tab.open{transform:translate(0,-50%)}
+.sell-tab-handle{width:30px;border:0;cursor:pointer;background:#2874f0;color:#fff;border-radius:10px 0 0 10px;display:grid;place-items:center;font-size:18px;padding:14px 0}
+.sell-tab-handle svg{transition:transform .28s ease}
+.sell-tab.open .sell-tab-handle svg{transform:rotate(180deg)}
+.sell-tab-body{background:#fff;color:#172337;padding:14px 16px;display:grid;gap:8px;min-width:190px;box-sizing:border-box}
+.sell-tab-body small{font-size:12px;color:#6b7280;line-height:1.35}
+.sell-tab-btn{display:block;text-align:center;background:#fb641b;color:#fff!important;font-weight:700;font-size:14px;padding:10px 14px;border-radius:6px;text-decoration:none;white-space:nowrap}
+.sell-tab-btn:hover{background:#e5560f}
+.dark .sell-tab-body{background:#182033;color:#f1f4fb}
+.dark .sell-tab-body small{color:#9aa6bd}
+@media print{.sell-tab{display:none}}
+@media (prefers-reduced-motion:reduce){.sell-tab,.sell-tab-handle svg{transition:none}}
+.sell-tab-link{text-align:center;font-size:12px;font-weight:600;color:#2874f0;text-decoration:none}
+.sell-tab-link:hover{text-decoration:underline}
+.dark .sell-tab-link{color:#7aa9ff}

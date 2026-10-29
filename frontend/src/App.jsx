@@ -49,6 +49,16 @@ const ManagerLayout = lazy(() => import('./components/layouts/ManagerLayout'));
 const ManagerDashboard = lazy(() => import('./pages/manager/Dashboard'));
 const ManagerOrders = lazy(() => import('./pages/manager/Orders'));
 const ManagerPartnerRequests = lazy(() => import('./pages/manager/PartnerRequests'));
+const ManagerSellers = lazy(() => import('./pages/manager/Sellers'));
+const ManagerDeals = lazy(() => import('./pages/manager/Deals'));
+
+// Seller panel (manager access deta hai, sirf role 'seller')
+const SellerLayout = lazy(() => import('./components/layouts/SellerLayout'));
+const SellerDashboard = lazy(() => import('./pages/seller/Dashboard'));
+const SellerVerification = lazy(() => import('./pages/seller/Verification'));
+const SellerDeals = lazy(() => import('./pages/seller/Deals'));
+const BecomeSeller = lazy(() => import('./pages/seller/BecomeSeller'));
+const SellerSetupPassword = lazy(() => import('./pages/seller/SetupPassword'));
  
 // Components
 import Loading from './components/Loading';
@@ -156,6 +166,17 @@ function App() {
               <Route index element={<ManagerDashboard />} />
               <Route path="orders" element={<ManagerOrders />} />
               <Route path="partner-requests" element={<ManagerPartnerRequests />} />
+              <Route path="sellers" element={<ManagerSellers />} />
+              <Route path="deals" element={<ManagerDeals />} />
+            </Route>
+
+            {/* Seller: password set link (public) + panel (sirf seller) */}
+            <Route path="/become-seller" element={<BecomeSeller />} />
+            <Route path="/seller/setup/:token" element={<SellerSetupPassword />} />
+            <Route path="/seller" element={<SellerLayout />}>
+              <Route index element={<SellerDashboard />} />
+              <Route path="verification" element={<SellerVerification />} />
+              <Route path="deals" element={<SellerDeals />} />
             </Route>
           </Routes>
         </AnimatePresence>

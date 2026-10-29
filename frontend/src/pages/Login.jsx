@@ -21,7 +21,8 @@ const Login = () => {
     if (login.fulfilled.match(result)) {
       toast.success('Login Successful');
       // Manager ko seedha apne panel me bhejo
-      navigate(result.payload?.user?.role === 'manager' ? '/manager' : '/');
+      const role = result.payload?.user?.role;
+      navigate(role === 'manager' ? '/manager' : role === 'seller' ? '/seller' : '/');
     } else {
       toast.error(result.payload || 'Login failed');
       dispatch(clearErrors());
@@ -34,7 +35,7 @@ const Login = () => {
       lead="Sign in to see your orders, wishlist and recommendations picked just for you."
       title="Login"
       subtitle="Enter your email and password to continue."
-      footer={<>New to Flipkart? <Link to="/register" className="auth-link">Create an account</Link></>}
+      footer={<>New to Flipkart? <Link to="/register" className="auth-link">Create an account</Link> · Want to sell? <Link to="/become-seller" className="auth-link">Become a seller</Link></>}
     >
       <form onSubmit={handleSubmit} className="auth-form">
         <Field icon={HiOutlineMail} label="Email address" type="email" required autoComplete="email"

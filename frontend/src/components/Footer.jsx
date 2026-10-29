@@ -5,6 +5,7 @@ import {
   HiOutlineLocationMarker,
   HiOutlineChevronUp,
 } from 'react-icons/hi';
+import SellOnStoreButton from './seller/SellOnStoreButton';
 import './footer.css';
 
 const COLUMNS = [
@@ -16,6 +17,9 @@ const COLUMNS = [
 const Footer = () => {
   return (
     <footer className="ft">
+      {/* Side par chhupa "Become a seller" tab (arrow dabane par nikalta hai) */}
+      <SellOnStoreButton />
+
       {/* Main Footer */}
       <div className="ft-wrap">
         <div className="ft-main">
@@ -69,33 +73,34 @@ const Footer = () => {
           </div>
         </div>
       </div>
-     {/* Bottom Footer */}
-<div className="ft-bottom">
-  <div className="ft-bottom-in">
-    <p className="ft-copy">
-      © {new Date().getFullYear()} Flipkart Clone. For demonstration purposes only.
-    </p>
 
-    <div className="ft-pays">
-      {['UPI', 'Cards', 'Net Banking', 'COD'].map((p) => (
-        <span key={p} className="ft-pay-chip">{p}</span>
-      ))}
-    </div>
+      {/* Bottom Footer */}
+      <div className="ft-bottom">
+        <div className="ft-bottom-in">
+          <p className="ft-copy">
+            © {new Date().getFullYear()} Flipkart Clone. For demonstration purposes only.
+          </p>
 
-    <div className="ft-top-wrap">
-      <p className="ft-top-text">Back to top</p>
-      <button
-        type="button"
-        className="ft-top"
-        aria-label="Back to top"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      > 
-        <HiOutlineChevronUp />
-      </button>
-    </div>
-  </div>
-</div>
-      </footer>
+          <div className="ft-pays">
+            {['UPI', 'Cards', 'Net Banking', 'COD'].map((p) => (
+              <span key={p} className="ft-pay-chip">{p}</span>
+            ))}
+          </div>
+
+          <div className="ft-top-wrap">
+            <p className="ft-top-text">Back to top</p>
+            <button
+              type="button"
+              className="ft-top"
+              aria-label="Back to top"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              <HiOutlineChevronUp />
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 };
 

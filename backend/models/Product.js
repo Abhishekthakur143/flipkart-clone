@@ -122,6 +122,13 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    // ---- Seller (consignment) fields ----
+    // select:false => ye store ka andar ka hisaab hai, public product API me kabhi nahi jaata.
+    // Padhne ke liye: Product.find().select('+seller +dealPrice +deal')
+    seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', select: false, index: true },
+    dealPrice: { type: Number, select: false }, // seller ko per unit milne wala rate (customer price nahi)
+    deal: { type: mongoose.Schema.Types.ObjectId, ref: 'Deal', select: false },
   },
   { timestamps: true }
 );

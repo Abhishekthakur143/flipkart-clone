@@ -111,3 +111,14 @@ exports.isManager = (req, res, next) => {
   }
   next();
 };
+
+// Seller panel: sirf role 'seller' (aur account active)
+exports.isSeller = (req, res, next) => {
+  if (!req.user || req.user.role !== 'seller') {
+    return res.status(403).json({ success: false, message: 'Access denied. Seller only.' });
+  }
+  if (req.user.isActive === false) {
+    return res.status(403).json({ success: false, message: 'Your seller account is disabled. Contact the manager.' });
+  }
+  next();
+};

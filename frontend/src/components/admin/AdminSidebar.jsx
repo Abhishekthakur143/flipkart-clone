@@ -5,6 +5,8 @@ import {
   HiOutlineShoppingBag,
   HiOutlineUsers,
   HiOutlineUserGroup,
+  HiOutlineBriefcase,
+  HiOutlineBadgeCheck,
   HiOutlineTag,
   HiOutlineClipboardList,
   HiOutlineTicket,
@@ -21,6 +23,7 @@ const menuItems = [
   { name: 'Orders', path: '/admin/orders', icon: HiOutlineClipboardList },
   { name: 'Categories', path: '/admin/categories', icon: HiOutlineTag },
   { name: 'Users', path: '/admin/users', icon: HiOutlineUsers },
+  { name: 'Managers', path: '/admin/managers', icon: HiOutlineBriefcase },
   { name: 'Delivery Partners', path: '/admin/delivery-partners', icon: HiOutlineUserGroup },
   { name: 'Coupons', path: '/admin/coupons', icon: HiOutlineTicket },
 ];
@@ -34,6 +37,7 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
   // Delivery menu: hidden until the admin has CONFIRMED at least one order
   const [ready, setReady] = useState(0);   // confirmed, waiting for a delivery partner
   const [moving, setMoving] = useState(0); // already with a delivery partner
+  const [approvals, setApprovals] = useState(0); // manager ne bheje, admin ke yes/no baaki
 
   const loadCounts = useCallback(async () => {
     try {
@@ -47,6 +51,12 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
       });
       setReady(r);
       setMoving(m);
+    } catch {
+      /* keep the previous state */
+    }
+    try {
+      const { data } = await API.get('/partner-requests/admin/count');
+      setApprovals(data.pending || 0);
     } catch {
       /* keep the previous state */
     }
@@ -68,9 +78,11 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
       ? path === '/admin'
       : path.startsWith(p) || (p === '/admin/products' && path.startsWith('/admin/product/'));
 
+  // Approvals Dashboard ke just neeche (Phase 3 me product deals bhi yahin aayengi)
+  const all = [menuItems[0], { name: 'Approvals', path: '/admin/approvals', icon: HiOutlineBadgeCheck, badge: approvals }, ...menuItems.slice(1)];
   const items = showDelivery
-    ? [...menuItems.slice(0, 3), { name: 'Deliveries', path: '/admin/deliveries', icon: HiOutlineTruck, badge: ready }, ...menuItems.slice(3)]
-    : menuItems;
+    ? [...all.slice(0, 4), { name: 'Deliveries', path: '/admin/deliveries', icon: HiOutlineTruck, badge: ready }, ...all.slice(4)]
+    : all;
 
   return (
     <>

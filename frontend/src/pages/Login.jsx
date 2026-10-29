@@ -20,7 +20,8 @@ const Login = () => {
     setBusy(false);
     if (login.fulfilled.match(result)) {
       toast.success('Login Successful');
-      navigate('/');
+      // Manager ko seedha apne panel me bhejo
+      navigate(result.payload?.user?.role === 'manager' ? '/manager' : '/');
     } else {
       toast.error(result.payload || 'Login failed');
       dispatch(clearErrors());

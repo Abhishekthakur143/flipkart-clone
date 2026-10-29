@@ -32,13 +32,16 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
+      enum: ['user', 'admin', 'manager', 'seller'],
       default: 'user',
     },
     phone: {
       type: String,
       default: '',
     },
+    // Staff accounts (manager/seller) ko admin disable kar sakta hai
+    isActive: { type: Boolean, default: true },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     addresses: [
       {
         name: { type: String, required: true },

@@ -1,0 +1,25 @@
+/* Manager panel: admin.css ki classes use hoti hain, yahan sirf extra */
+/* Lambi table mobile par page ko chauda na kare */
+.adm-stack{grid-template-columns:minmax(0,1fr)}
+.adm-stat,.mg-opt,.adm-modal{box-sizing:border-box}
+.mg-two{grid-template-columns:minmax(0,1fr)}
+.mg-stock{display:flex;align-items:center;gap:10px;min-width:150px}
+.mg-stock-track{flex:1;height:8px;border-radius:8px;background:#eef0f5;overflow:hidden}
+.mg-stock-fill{height:100%;border-radius:8px}
+.mg-stock b{min-width:34px;text-align:right;font-size:13.5px;color:#12182b}
+.mg-two{display:grid;gap:20px}
+@media(min-width:1000px){.mg-two{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.mg-opt{display:flex;align-items:center;gap:12px;width:100%;padding:12px;margin-bottom:8px;border:1.5px solid #e4e7ec;border-radius:14px;background:#fff;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.mg-opt:hover{border-color:#b6ccf7}
+.mg-opt.on{border-color:#2874f0;background:#eef4ff}
+.mg-opt div{flex:1;min-width:0}
+.mg-opt b{display:block;font-size:14px;color:#12182b}
+.mg-opt small{font-size:12px;color:#667085}
+.mg-opt .r{flex:none;text-align:right}
+.mg-badge-btn{margin-left:auto;min-width:22px;height:20px;padding:0 7px;border-radius:99px;display:grid;place-items:center;font-size:11.5px;font-weight:800;background:#2874f0;color:#fff}
+.dark .mg-stock-track{background:rgba(255,255,255,.1)}
+.dark .mg-stock b,.dark .mg-opt b{color:#f1f4fb}
+.dark .mg-opt{background:#121826;border-color:rgba(255,255,255,.12)}
+.dark .mg-opt.on{background:rgba(77,141,255,.16);border-color:#4d8dff}
+.dark .mg-opt small{color:#93a0b8}
+.adm-input,.adm-select,.adm-textarea{box-sizing:border-box}

@@ -29,6 +29,7 @@ const ForgotPasswordOtp = lazy(() => import('./pages/ForgotPasswordOtp'));
 // Delivery partner app (separate login + dashboard)
 const DeliveryAuth = lazy(() => import('./delivery/DeliveryAuth'));
 const DeliveryDashboard = lazy(() => import('./delivery/DeliveryDashboard'));
+const DeliveryJoin = lazy(() => import('./delivery/DeliveryJoin'));
  
 // Admin Pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -40,6 +41,14 @@ const AdminCategories = lazy(() => import('./pages/admin/Categories'));
 const AdminCoupons = lazy(() => import('./pages/admin/Coupons'));
 const AdminDeliveries = lazy(() => import('./pages/admin/Deliveries'));
 const AdminDeliveryPartners = lazy(() => import('./pages/admin/DeliveryPartners'));
+const AdminManagers = lazy(() => import('./pages/admin/Managers'));
+const AdminApprovals = lazy(() => import('./pages/admin/Approvals'));
+
+// Manager panel (admin banata hai, sirf role 'manager')
+const ManagerLayout = lazy(() => import('./components/layouts/ManagerLayout'));
+const ManagerDashboard = lazy(() => import('./pages/manager/Dashboard'));
+const ManagerOrders = lazy(() => import('./pages/manager/Orders'));
+const ManagerPartnerRequests = lazy(() => import('./pages/manager/PartnerRequests'));
  
 // Components
 import Loading from './components/Loading';
@@ -115,6 +124,7 @@ function App() {
             {/* Delivery Partner Routes (own layout, own login) */}
             {/* Register nahi hai: partner sirf admin banata hai */}
             <Route path="/delivery/login" element={<DeliveryAuth mode="login" />} />
+            <Route path="/delivery/join" element={<DeliveryJoin />} />
             <Route path="/delivery/register" element={<Navigate to="/delivery/login" replace />} />
             <Route path="/delivery" element={<DeliveryDashboard />} />
  
@@ -137,6 +147,15 @@ function App() {
               <Route path="coupons" element={<AdminCoupons />} />
               <Route path="deliveries" element={<AdminDeliveries />} />
               <Route path="delivery-partners" element={<AdminDeliveryPartners />} />
+              <Route path="managers" element={<AdminManagers />} />
+              <Route path="approvals" element={<AdminApprovals />} />
+            </Route>
+
+            {/* Manager Routes (sirf manager) */}
+            <Route path="/manager" element={<ManagerLayout />}>
+              <Route index element={<ManagerDashboard />} />
+              <Route path="orders" element={<ManagerOrders />} />
+              <Route path="partner-requests" element={<ManagerPartnerRequests />} />
             </Route>
           </Routes>
         </AnimatePresence>

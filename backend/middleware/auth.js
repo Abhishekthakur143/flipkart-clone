@@ -99,3 +99,15 @@ exports.isAdmin = (req, res, next) => {
   }
   next();
 };
+
+// Manager panel: sirf role 'manager' (aur account active). Admin yahan nahi aata,
+// kyunki manager ka dashboard sirf manager ka hai.
+exports.isManager = (req, res, next) => {
+  if (!req.user || req.user.role !== 'manager') {
+    return res.status(403).json({ success: false, message: 'Access denied. Manager only.' });
+  }
+  if (req.user.isActive === false) {
+    return res.status(403).json({ success: false, message: 'Your manager account is disabled. Contact the admin.' });
+  }
+  next();
+};

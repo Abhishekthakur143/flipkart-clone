@@ -5,6 +5,8 @@ import API from '../../utils/api';
 import toast from 'react-hot-toast';
 import '../../components/admin/admin.css';
 
+const badgeTone = (role) => (role === 'admin' ? 'purple' : role === 'manager' ? 'warn' : 'info');
+
 const Users = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.admin);
@@ -64,10 +66,13 @@ const Users = () => {
                   </td>
                   <td>{user.email}</td>
                   <td>{new Date(user.createdAt).toLocaleDateString()}</td>
-                  <td><span className={`adm-badge ${user.role === 'admin' ? 'purple' : 'info'}`}>{user.role}</span></td>
+                  <td><span className={`adm-badge ${badgeTone(user.role)}`}>{user.role}</span></td>
                   <td>
                     {user._id === me?._id ? (
                       <span className="adm-muted">You</span>
+                    ) : user.role === 'manager' || user.role === 'seller' ? (
+                      // Manager/seller ka role yahan se nahi badalta (Managers page se manage hota hai)
+                      <span className="adm-muted">{user.role === 'manager' ? 'See Managers page' : 'Seller'}</span>
                     ) : user.role === 'user' ? (
                       <button onClick={() => handleRoleChange(user._id, 'admin')} className="adm-btn sm">Make Admin</button>
                     ) : (

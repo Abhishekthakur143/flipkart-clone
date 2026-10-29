@@ -9,7 +9,7 @@ import { dv, errMsg, tokenStore } from './deliveryApi';
 import { useDvTheme } from './ui';
 import './delivery.css';
 
-// Register nahi hai: delivery partner ka account sirf admin banata hai
+// Seedha register nahi hota: /delivery/join par apply karo, manager review karta hai, admin approve karta hai
 const DeliveryAuth = () => {
   const navigate = useNavigate();
   const [theme, toggleTheme] = useDvTheme();
@@ -87,7 +87,8 @@ const DeliveryAuth = () => {
             </form>
 
             <div className="dv-auth-foot">
-              Partner accounts are created by the admin. To join, please contact the admin.
+              New here? Apply to become a delivery partner. Accounts are created after approval.
+              <div style={{ marginTop: 10 }}><Link to="/delivery/join" style={{ color: 'var(--dv-brand, #2874f0)', fontWeight: 700 }}>Apply to join →</Link></div>
               <div style={{ marginTop: 10 }}><Link to="/" style={{ color: 'var(--dv-muted)', fontWeight: 600 }}>← Back to shop</Link></div>
             </div>
           </div>

@@ -1,22 +1,15 @@
 import { useEffect, useState } from 'react';
 import API from '../../utils/api';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import {
-  HiOutlinePlus, HiOutlineKey, HiOutlineTrash, HiOutlineBan,
-  HiOutlineCheckCircle, HiOutlineClipboardCopy, HiOutlineRefresh, HiOutlineX,
+  HiOutlineKey, HiOutlineTrash, HiOutlineBan,
+  HiOutlineCheckCircle, HiOutlineClipboardCopy, HiOutlineX, HiOutlineBadgeCheck,
 } from 'react-icons/hi';
 import '../../components/admin/admin.css';
 
 const BASE = '/delivery/admin/partners';
-const VEHICLES = ['Bike', 'Scooter', 'Cycle', 'EV'];
-const EMPTY = { name: '', email: '', phone: '', password: '', vehicleType: 'Bike', vehicleNumber: '', city: '' };
-
-const genPassword = () => {
-  const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const arr = new Uint32Array(8);
-  crypto.getRandomValues(arr);
-  return Array.from(arr, (n) => chars[n % chars.length]).join('');
-};
+// Naya partner ab yahan se nahi banta: manager add karta hai / applicant apply karta hai, admin /admin/approvals me yes-no bolta hai.
 
 const copy = (text) => {
   navigator.clipboard.writeText(text).then(() => toast.success('Copied'), () => toast.error('Copy nahi hua'));
@@ -47,9 +40,6 @@ const DeliveryPartners = () => {
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState(EMPTY);
-  const [saving, setSaving] = useState(false);
   const [creds, setCreds] = useState(null);
 
   const load = async () => {
@@ -63,23 +53,6 @@ const DeliveryPartners = () => {
   };
 
   useEffect(() => { load(); }, []);
-
-  const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
-
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const { data } = await API.post(BASE, form);
-      setShowForm(false);
-      setForm(EMPTY);
-      setCreds({ title: `${data.partner.name} ab Delivery Partner hai`, email: data.partner.email, password: data.password });
-      load();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Partner nahi ban paya');
-    }
-    setSaving(false);
-  };
 
   const toggleActive = async (p) => {
     if (p.isActive && !window.confirm(`${p.name} ko disable karna hai? Wo login nahi kar paega.`)) return;
@@ -137,9 +110,9 @@ const DeliveryPartners = () => {
             placeholder="Search name, email, phone, city"
             className="adm-input adm-search"
           />
-          <button className="adm-btn" onClick={() => setShowForm(true)}>
-            <HiOutlinePlus /> Add Partner
-          </button>
+          <Link to="/admin/approvals" className="adm-btn">
+            <HiOutlineBadgeCheck /> Approvals
+          </Link>
         </div>
       </div>
 
@@ -197,66 +170,11 @@ const DeliveryPartners = () => {
           </table>
           {list.length === 0 && (
             <div className="adm-empty">
-              {partners.length === 0 ? "Abhi koi delivery partner nahi hai. 'Add Partner' se pehla partner jodo." : 'No partners found.'}
+              {partners.length === 0 ? 'Abhi koi delivery partner nahi hai. Manager ke bheje applications Approvals me approve karo.' : 'No partners found.'}
             </div>
           )}
         </div>
       </div>
-
-      {/* Add partner modal */}
-      {showForm && (
-        <div className="adm-modal-back" onClick={() => setShowForm(false)}>
-          <div className="adm-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="adm-modal-x" onClick={() => setShowForm(false)} aria-label="Close"><HiOutlineX /></button>
-            <h2>Add Delivery Partner</h2>
-            <p className="adm-modal-sub">Sirf yahan se banaye hue partner hi delivery app me login kar sakte hain.</p>
-            <form onSubmit={handleCreate} className="adm-form">
-              <div className="adm-row2">
-                <div>
-                  <label className="adm-label">Full Name</label>
-                  <input className="adm-input" value={form.name} onChange={set('name')} required />
-                </div>
-                <div>
-                  <label className="adm-label">Phone</label>
-                  <input className="adm-input" value={form.phone} onChange={set('phone')} placeholder="10-digit mobile" required />
-                </div>
-              </div>
-              <div>
-                <label className="adm-label">Email (login ke liye)</label>
-                <input type="email" className="adm-input" value={form.email} onChange={set('email')} required />
-              </div>
-              <div>
-                <label className="adm-label">Password (khali chhodo to apne aap ban jayega)</label>
-                <div className="adm-pw-row">
-                  <input className="adm-input" value={form.password} onChange={set('password')} placeholder="Min 6 characters" />
-                  <button type="button" className="adm-btn ghost" onClick={() => setForm({ ...form, password: genPassword() })}>
-                    <HiOutlineRefresh /> Generate
-                  </button>
-                </div>
-              </div>
-              <div className="adm-row2">
-                <div>
-                  <label className="adm-label">Vehicle Type</label>
-                  <select className="adm-select" value={form.vehicleType} onChange={set('vehicleType')}>
-                    {VEHICLES.map((v) => <option key={v} value={v}>{v}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="adm-label">Vehicle Number</label>
-                  <input className="adm-input" value={form.vehicleNumber} onChange={set('vehicleNumber')} placeholder="MP09 AB 1234" />
-                </div>
-              </div>
-              <div>
-                <label className="adm-label">City</label>
-                <input className="adm-input" value={form.city} onChange={set('city')} />
-              </div>
-              <button type="submit" className="adm-btn block" disabled={saving} style={{ height: 50 }}>
-                {saving ? 'Creating...' : 'CREATE PARTNER'}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
 
       {creds && <CredModal creds={creds} onClose={() => setCreds(null)} />}
     </div>

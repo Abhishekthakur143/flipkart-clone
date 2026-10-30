@@ -1,34 +1,34 @@
-/* ===== Premium Wishlist ===== */
-.wl{max-width:1200px;margin:0 auto;padding:24px 12px}
-@media(min-width:768px){.wl{padding:28px 16px}}
-.wl-card{padding:24px;background:#fff;border-radius:22px;box-shadow:0 14px 34px -22px rgba(20,40,110,.35),0 0 0 1px rgba(20,40,110,.06)}
-.wl-title{display:flex;align-items:center;gap:12px;margin:0 0 22px;font-size:24px;font-weight:800;letter-spacing:-.02em;color:#12182b}
-.wl-title-ico{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#ff5a7a,#f04438);box-shadow:0 12px 22px -10px rgba(240,68,56,.7)}
-.wl-title-ico svg{width:23px;height:23px}
-.wl-count{padding:3px 12px;border-radius:999px;font-size:14px;font-weight:800;color:#d92d20;background:#fee4e2}
-.wl-grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
-@media(min-width:640px){.wl-grid{grid-template-columns:repeat(3,1fr)}}
-@media(min-width:1024px){.wl-grid{grid-template-columns:repeat(4,1fr)}}
-
-.wl-state{padding:48px 20px;text-align:center}
-.wl-state-ico{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;color:#f04438;background:#fef3f2;animation:wlBeat 2.4s ease-in-out infinite}
-.wl-state-ico svg{width:40px;height:40px}
-@keyframes wlBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.wl-state h2{margin:0 0 6px;font-size:22px;font-weight:800;color:#12182b}
-.wl-state p{margin:0 0 22px;font-size:14px;color:#667085}
-.wl-btn{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 30px;border-radius:12px;font-size:14.5px;font-weight:700;color:#fff;text-decoration:none;background:linear-gradient(135deg,#2874f0,#5b4cf0);box-shadow:0 12px 24px -10px rgba(60,80,240,.7);transition:transform .15s}
-.wl-btn:hover{transform:translateY(-2px)}
-.wl-loading{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-size:14px;color:#667085}
-.wl-spin{width:38px;height:38px;border:3px solid #dbe6ff;border-top-color:#2874f0;border-radius:50%;animation:wlSpin .8s linear infinite}
-@keyframes wlSpin{to{transform:rotate(360deg)}}
-.wl-error{margin:40px auto;max-width:520px;padding:16px 20px;border-radius:14px;text-align:center;font-weight:700;color:#b42318;background:#fef3f2;box-shadow:inset 0 0 0 1px #fecdca}
-
-.dark .wl-card{background:#121826;box-shadow:0 14px 34px -22px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08)}
-.dark .wl-title,.dark .wl-state h2{color:#f1f4fb}
-.dark .wl-count{background:rgba(240,68,56,.18);color:#fda29b}
-.dark .wl-state-ico{background:rgba(240,68,56,.14);color:#f97066}
-.dark .wl-state p,.dark .wl-loading{color:#93a0b8}
-.dark .wl-spin{border-color:rgba(255,255,255,.12);border-top-color:#7aa9ff}
-.dark .wl-error{background:rgba(240,68,56,.14);color:#fda29b;box-shadow:inset 0 0 0 1px rgba(240,68,56,.35)}
-
-@media(prefers-reduced-motion:reduce){.wl-state-ico,.wl-spin{animation:none}}
+/* ===== Spatial Wishlist (class names unchanged) ===== */
+.wl { max-width: 1200px; margin: 0 auto; padding: 24px 12px; }
+@media (min-width: 768px) { .wl { padding: 28px 16px; } }
+/* container is a plain translucent slab; the product cards inside carry the blur */
+.wl-card { padding: 26px; background: var(--s-glass); border-radius: 32px; box-shadow: var(--s-hl), var(--s-sh-2); }
+.wl-title { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: var(--s-ink); }
+.wl-title-ico { width: 44px; height: 44px; border-radius: 16px; display: grid; place-items: center; color: #fff; background: linear-gradient(180deg, #ff7a93, #f04438); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 12px 22px -10px rgba(240, 68, 56, 0.75); }
+.wl-title-ico svg { width: 23px; height: 23px; }
+.wl-count { padding: 3px 13px; border-radius: 999px; font-size: 14px; font-weight: 800; color: #d92d20; background: rgba(240, 68, 56, 0.14); }
+.wl-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 640px) { .wl-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .wl-grid { grid-template-columns: repeat(4, 1fr); } }
+ 
+.wl-state { padding: 48px 20px; text-align: center; }
+.wl-state-ico { width: 88px; height: 88px; margin: 0 auto 18px; border-radius: 50%; display: grid; place-items: center; color: #f04438; background: rgba(240, 68, 56, 0.12); box-shadow: var(--s-hl); animation: wlBeat 2.4s ease-in-out infinite; }
+.wl-state-ico svg { width: 40px; height: 40px; }
+@keyframes wlBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+.wl-state h2 { margin: 0 0 6px; font-size: 22px; font-weight: 800; color: var(--s-ink); }
+.wl-state p { margin: 0 0 22px; font-size: 14px; color: var(--s-ink-soft); }
+.wl-btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 32px; border-radius: 999px; font-size: 14.5px; font-weight: 700; color: #fff; text-decoration: none; background: linear-gradient(180deg, #4b90ff, #2874f0 55%, #1f63d6); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 12px 24px -10px rgba(60, 80, 240, 0.75); transition: transform 0.15s; }
+.wl-btn:hover { transform: translateY(-2px); }
+.wl-loading { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; font-size: 14px; color: var(--s-ink-soft); }
+.wl-spin { width: 38px; height: 38px; border: 3px solid color-mix(in srgb, var(--s-accent) 20%, transparent); border-top-color: var(--s-accent); border-radius: 50%; animation: wlSpin 0.8s linear infinite; }
+@keyframes wlSpin { to { transform: rotate(360deg); } }
+.wl-error { margin: 40px auto; max-width: 520px; padding: 16px 20px; border-radius: 22px; text-align: center; font-weight: 700; color: #b42318; background: rgba(240, 68, 56, 0.12); box-shadow: inset 0 0 0 1px rgba(240, 68, 56, 0.3); }
+ 
+@media (max-width: 767px) { .wl-card { border-radius: 26px; padding: 18px; } }
+ 
+.dark .wl-count { color: #fda29b; }
+.dark .wl-state-ico { color: #f97066; }
+.dark .wl-error { color: #fda29b; }
+ 
+@media (prefers-reduced-motion: reduce) { .wl-state-ico, .wl-spin { animation: none; } .wl-btn { transition: none; } }
+ 

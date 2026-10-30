@@ -2,203 +2,424 @@
 @tailwind components;
 @tailwind utilities;
  
+/* =====================================================================
+   SPATIAL UI DESIGN SYSTEM
+   Ek hi jagah se poori site ka look control hota hai (tokens neeche hain).
+   Purani classes (bg-white, card, btn-primary, input-field...) wahi hain,
+   isliye JSX badle bina bhi poori site spatial dikhegi.
+   ===================================================================== */
+ 
+:root {
+  /* ambient base */
+  --s-base: #e8edf9;
+  --s-orb-a: rgba(40, 116, 240, 0.30);
+  --s-orb-b: rgba(150, 125, 250, 0.26);
+  --s-orb-c: rgba(255, 159, 0, 0.18);
+  --s-orb-d: rgba(45, 212, 170, 0.16);
+ 
+  /* glass surfaces */
+  --s-glass: rgba(255, 255, 255, 0.58);
+  --s-glass-hover: rgba(255, 255, 255, 0.74);
+  --s-glass-strong: rgba(255, 255, 255, 0.86);
+  --s-edge: rgba(255, 255, 255, 0.80);
+  --s-line: rgba(19, 26, 46, 0.09);
+  --s-blur: 22px;
+ 
+  /* text */
+  --s-ink: #131a2e;
+  --s-ink-soft: #55607e;
+  --s-accent: #2874f0;
+  --s-accent-deep: #1a5dc8;
+ 
+  /* depth: top highlight + layered shadows */
+  --s-hl: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 1px var(--s-edge);
+  --s-sh-1: 0 1px 2px rgba(25, 40, 90, 0.05), 0 6px 18px -6px rgba(25, 40, 90, 0.14);
+  --s-sh-2: 0 2px 4px rgba(25, 40, 90, 0.05), 0 14px 30px -10px rgba(25, 40, 90, 0.20);
+  --s-sh-3: 0 4px 8px rgba(25, 40, 90, 0.06), 0 28px 56px -16px rgba(25, 40, 90, 0.30);
+}
+ 
+.dark {
+  --s-base: #070b14;
+  --s-orb-a: rgba(60, 120, 255, 0.22);
+  --s-orb-b: rgba(120, 90, 240, 0.20);
+  --s-orb-c: rgba(251, 100, 27, 0.10);
+  --s-orb-d: rgba(30, 190, 150, 0.10);
+ 
+  --s-glass: rgba(26, 34, 54, 0.56);
+  --s-glass-hover: rgba(36, 46, 72, 0.68);
+  --s-glass-strong: rgba(22, 30, 48, 0.88);
+  --s-edge: rgba(255, 255, 255, 0.10);
+  --s-line: rgba(255, 255, 255, 0.09);
+ 
+  --s-ink: #e8ecf4;
+  --s-ink-soft: #93a0b8;
+  --s-accent: #4d8dff;
+  --s-accent-deep: #2f6ee6;
+ 
+  --s-hl: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 0 1px var(--s-edge);
+  --s-sh-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 20px -8px rgba(0, 0, 0, 0.55);
+  --s-sh-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 34px -12px rgba(0, 0, 0, 0.65);
+  --s-sh-3: 0 4px 8px rgba(0, 0, 0, 0.35), 0 30px 60px -18px rgba(0, 0, 0, 0.75);
+  color-scheme: dark;
+}
+ 
 @layer base {
-  body {
-    @apply bg-flipkart-bg text-flipkart-dark antialiased;
+  html {
+    background-color: var(--s-base);
   }
-  /* Standard CSS use karenge, @apply se VS Code error deta hai */
+  body {
+    background-color: var(--s-base);
+    color: var(--s-ink);
+    @apply antialiased;
+    letter-spacing: -0.005em;
+    min-height: 100vh;
+  }
+  /* Ambient light behind everything: soft colour orbs give the glass something to refract */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(640px 480px at 8% 4%, var(--s-orb-a), transparent 70%),
+      radial-gradient(560px 520px at 94% 12%, var(--s-orb-b), transparent 70%),
+      radial-gradient(620px 460px at 82% 96%, var(--s-orb-c), transparent 70%),
+      radial-gradient(520px 440px at 4% 88%, var(--s-orb-d), transparent 70%);
+  }
   *, *::before, *::after {
     box-sizing: border-box;
   }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+  }
+  :focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--s-accent) 45%, transparent);
+    outline-offset: 2px;
+  }
 }
  
+/* =====================================================================
+   COMPONENT CLASSES (same names as before)
+   ===================================================================== */
 @layer components {
+  /* ---- Buttons: capsule shape, lit from above ---- */
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline,
+  .btn-white {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background 0.2s, color 0.2s;
+  }
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .btn-outline:hover,
+  .btn-white:hover {
+    transform: translateY(-1px);
+  }
+  .btn-primary:active,
+  .btn-secondary:active,
+  .btn-outline:active,
+  .btn-white:active {
+    transform: scale(0.97);
+  }
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+ 
   .btn-primary {
-    @apply bg-flipkart-blue text-white px-8 py-3 rounded-sm font-medium 
-           hover:bg-flipkart-darkBlue transition-all duration-200 
-           active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    color: #fff;
+    background: linear-gradient(180deg, #4b90ff 0%, #2874f0 55%, #1f63d6 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 10px 22px -8px rgba(40, 116, 240, 0.65);
+  }
+  .btn-primary:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 16px 30px -8px rgba(40, 116, 240, 0.75);
   }
  
   .btn-secondary {
-    @apply bg-flipkart-orange text-white px-8 py-3 rounded-sm font-medium 
-           hover:bg-orange-600 transition-all duration-200 
-           active:scale-[0.98];
+    color: #fff;
+    background: linear-gradient(180deg, #ff8a4c 0%, #fb641b 60%, #e5520e 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 10px 22px -8px rgba(251, 100, 27, 0.65);
+  }
+  .btn-secondary:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 16px 30px -8px rgba(251, 100, 27, 0.75);
   }
  
   .btn-outline {
-    @apply border-2 border-flipkart-blue text-flipkart-blue px-8 py-3 rounded-sm 
-           font-medium hover:bg-flipkart-blue hover:text-white 
-           transition-all duration-200;
+    color: var(--s-accent);
+    background: var(--s-glass);
+    -webkit-backdrop-filter: blur(var(--s-blur)) saturate(160%);
+    backdrop-filter: blur(var(--s-blur)) saturate(160%);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--s-accent) 70%, transparent);
+  }
+  .btn-outline:hover {
+    color: #fff;
+    background: var(--s-accent);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 24px -8px rgba(40, 116, 240, 0.6);
   }
  
   .btn-white {
-    @apply bg-white text-flipkart-blue px-8 py-3 rounded-sm font-medium 
-           hover:bg-gray-50 transition-all duration-200 shadow-sm;
+    color: var(--s-accent);
+    background: var(--s-glass-strong);
+    -webkit-backdrop-filter: blur(var(--s-blur));
+    backdrop-filter: blur(var(--s-blur));
+    box-shadow: var(--s-hl), var(--s-sh-1);
   }
  
+  /* ---- Surfaces ---- */
   .card {
-    @apply bg-white rounded-sm shadow-sm hover:shadow-md transition-shadow duration-200;
+    background: var(--s-glass);
+    -webkit-backdrop-filter: blur(var(--s-blur)) saturate(170%);
+    backdrop-filter: blur(var(--s-blur)) saturate(170%);
+    border-radius: 20px;
+    box-shadow: var(--s-hl), var(--s-sh-1);
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s, background 0.28s;
+  }
+  .card:hover {
+    background: var(--s-glass-hover);
+    box-shadow: var(--s-hl), var(--s-sh-2);
   }
  
-  .input-field {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-sm 
-           focus:outline-none focus:border-flipkart-blue focus:ring-1 
-           focus:ring-flipkart-blue transition-all duration-200;
-  }
- 
-  .section-title {
-    @apply text-lg md:text-xl font-bold text-flipkart-dark flex items-center justify-between;
-  }
- 
-  .badge {
-    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
-  }
- 
-  .nav-link {
-    @apply text-gray-700 hover:text-flipkart-blue transition-colors duration-200 font-medium;
-  }
- 
-  /* Skeleton loading */
-  .skeleton {
-    @apply bg-gray-200 animate-pulse rounded;
-  }
- 
-  /* Flipkart style divider */
-  .divider {
-    @apply w-full h-[1px] bg-gray-200;
-  }
- 
-  /* Product card hover effect */
+  /* Product card: floats up towards you on hover */
   .product-card {
     @apply card cursor-pointer;
+    overflow: hidden;
+  }
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--s-hl), var(--s-sh-3), 0 0 0 1px color-mix(in srgb, var(--s-accent) 28%, transparent);
+  }
+  .product-card .product-image,
+  .product-card img {
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .product-card:hover .product-image,
+  .product-card:hover img {
+    transform: scale(1.06);
   }
  
-  .product-card:hover .product-image {
-    @apply scale-105;
+  /* ---- Form fields ---- */
+  .input-field {
+    width: 100%;
+    padding: 0.8rem 1.1rem;
+    border-radius: 14px;
+    color: var(--s-ink);
+    background: color-mix(in srgb, var(--s-glass-strong) 70%, transparent);
+    box-shadow: inset 0 1px 2px rgba(19, 26, 46, 0.06);
+    border: 1px solid var(--s-line);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .input-field:focus {
+    outline: none;
+    background: var(--s-glass-strong);
+    border-color: var(--s-accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--s-accent) 20%, transparent);
   }
  
-  /* Scrollbar styling */
-  .custom-scrollbar::-webkit-scrollbar {
-    height: 4px;
+  /* ---- Small pieces ---- */
+  .section-title {
+    @apply flex items-center justify-between;
+    font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--s-ink);
   }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+  .badge {
+    @apply inline-flex items-center text-xs font-medium;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
   }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
+  .nav-link {
+    @apply font-medium transition-colors duration-200;
+    color: var(--s-ink-soft);
   }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400;
+  .nav-link:hover {
+    color: var(--s-accent);
+  }
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--s-line);
+  }
+ 
+  /* Skeleton: glass shimmer */
+  .skeleton {
+    border-radius: 12px;
+    background: linear-gradient(100deg, rgba(19, 26, 46, 0.05) 30%, rgba(255, 255, 255, 0.6) 50%, rgba(19, 26, 46, 0.05) 70%);
+    background-size: 220% 100%;
+    animation: s-shimmer 1.5s linear infinite;
+  }
+  .dark .skeleton {
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0.04) 30%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.04) 70%);
+    background-size: 220% 100%;
+  }
+ 
+  /* Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar { height: 4px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--s-line); border-radius: 999px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(120, 130, 160, 0.5); }
+ 
+  /* ---- Reusable helpers for upcoming rounds ---- */
+  .glass {
+    background: var(--s-glass);
+    -webkit-backdrop-filter: blur(var(--s-blur)) saturate(170%);
+    backdrop-filter: blur(var(--s-blur)) saturate(170%);
+    box-shadow: var(--s-hl), var(--s-sh-1);
+  }
+  .glass-strong {
+    background: var(--s-glass-strong);
+    -webkit-backdrop-filter: blur(calc(var(--s-blur) + 6px)) saturate(180%);
+    backdrop-filter: blur(calc(var(--s-blur) + 6px)) saturate(180%);
+    box-shadow: var(--s-hl), var(--s-sh-2);
+  }
+  .glass-pill {
+    @apply glass;
+    border-radius: 999px;
   }
 }
  
-/* Rating stars color */
-.star-filled {
-  color: #ff9f00;
-}
-.star-empty {
-  color: #c0c0c0;
+@keyframes s-shimmer {
+  0% { background-position: 120% 0; }
+  100% { background-position: -120% 0; }
 }
  
-/* Toast customization */
-.toast-custom {
-  font-family: 'Inter', sans-serif;
+/* =====================================================================
+   GLOBAL OVERRIDES
+   Tailwind ki purani utility classes ko glass look dete hain,
+   taaki har page JSX badle bina spatial ho jaye.
+   ===================================================================== */
+ 
+/* Every white panel becomes a glass pane (inputs, tiny round dots/knobs stay solid) */
+.bg-white:not(input):not(textarea):not(select):not(.rounded-full) {
+  background-color: var(--s-glass);
+  -webkit-backdrop-filter: blur(var(--s-blur)) saturate(170%);
+  backdrop-filter: blur(var(--s-blur)) saturate(170%);
+  box-shadow: var(--s-hl), var(--s-sh-1);
+}
+/* Floating layers (dropdowns, popovers, modals) need to be more opaque to stay readable */
+.absolute.bg-white:not(input),
+.fixed .bg-white:not(input),
+.bg-white.shadow-xl,
+.bg-white.shadow-2xl {
+  background-color: var(--s-glass-strong);
+  -webkit-backdrop-filter: blur(calc(var(--s-blur) + 8px)) saturate(180%);
+  backdrop-filter: blur(calc(var(--s-blur) + 8px)) saturate(180%);
+  box-shadow: var(--s-hl), var(--s-sh-3);
+}
+input.bg-white, textarea.bg-white, select.bg-white {
+  background-color: var(--s-glass-strong);
 }
  
-/* ===== Premium dark theme (active when <html> has class "dark") ===== */
-.dark {
-  --d-bg: #0b0f17;
-  --d-surface: #121826;
-  --d-raised: #182033;
-  --d-line: rgba(255, 255, 255, 0.08);
-  --d-text: #e8ecf4;
-  --d-muted: #93a0b8;
-  --d-accent: #4d8dff;
-  color-scheme: dark;
+/* Soft panels */
+.bg-gray-50  { background-color: color-mix(in srgb, var(--s-glass-strong) 55%, transparent); }
+.bg-gray-100 { background-color: rgba(19, 26, 46, 0.05); }
+.bg-gray-200 { background-color: rgba(19, 26, 46, 0.08); }
+.dark .bg-gray-50  { background-color: rgba(255, 255, 255, 0.04); }
+.dark .bg-gray-100,
+.dark .bg-gray-200 { background-color: rgba(255, 255, 255, 0.07); }
+ 
+/* Header: translucent blue glass */
+header.bg-flipkart-blue {
+  background: linear-gradient(120deg, rgba(40, 116, 240, 0.88), rgba(33, 98, 218, 0.82) 55%, rgba(104, 88, 232, 0.80));
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30), 0 14px 34px -14px rgba(30, 60, 170, 0.5);
 }
-.dark body {
-  background: radial-gradient(900px 500px at 85% -5%, rgba(77, 141, 255, 0.10), transparent 60%), var(--d-bg);
-  background-attachment: fixed;
-  color: var(--d-text);
-}
-/* header + category strip */
 .dark header.bg-flipkart-blue {
-  background: linear-gradient(90deg, #0d1f4a, #14346e 55%, #1a4690);
-  border-bottom: 1px solid var(--d-line);
+  background: linear-gradient(120deg, rgba(14, 30, 72, 0.86), rgba(22, 52, 112, 0.80) 55%, rgba(40, 54, 130, 0.78));
 }
-.dark header .shadow-lg { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
-.dark header .bg-white.shadow-sm {
-  background: rgba(18, 24, 38, 0.85);
-  backdrop-filter: blur(10px);
-  border-color: var(--d-line);
+/* panels sitting inside the header must not blur-on-blur */
+header .bg-white:not(input):not(textarea):not(select):not(.rounded-full) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: var(--s-glass-strong);
 }
-/* surfaces */
-.dark .bg-white,
-.dark .card,
-.dark .btn-white {
-  background-color: var(--d-surface);
-  border: 1px solid var(--d-line);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+header input {
+  border-radius: 999px;
 }
-.dark .card:hover,
-.dark .product-card:hover {
-  border-color: rgba(77, 141, 255, 0.45);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(77, 141, 255, 0.25);
-  transform: translateY(-3px);
+ 
+/* Brand blue fills get a lit gradient (header excluded) */
+.bg-flipkart-blue:not(header) {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
-.dark .card, .dark .product-card { transition: transform .2s, box-shadow .2s, border-color .2s; }
-.dark .bg-flipkart-bg, .dark .bg-gray-50 { background-color: var(--d-bg); }
-.dark .bg-gray-100, .dark .bg-gray-200, .dark .skeleton { background-color: var(--d-raised); }
+ 
+/* Product imagery */
+.product-card img,
+.card img {
+  border-radius: 14px;
+}
+ 
+/* Rating / misc */
+.star-filled { color: #ff9f00; }
+.star-empty { color: #c0c0c0; }
+.toast-custom { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+ 
+/* =====================================================================
+   DARK MODE (html.dark): variables upar handle karte hain, yahan sirf text/inputs
+   ===================================================================== */
+.dark .text-flipkart-dark,
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700 { color: var(--s-ink); }
+.dark .text-gray-600,
+.dark .text-gray-500,
+.dark .text-gray-400 { color: var(--s-ink-soft); }
+.dark .section-title { color: #fff; }
+.dark .text-flipkart-blue,
+.dark .hover\:text-flipkart-blue:hover { color: #7aa9ff; }
+.dark header .text-flipkart-blue { color: #1e5fd6; }
+.dark .text-green-600,
+.dark .text-flipkart-green { color: #4cd37b; }
+.dark .star-empty { color: #475068; }
+ 
 .dark .bg-blue-50 { background-color: rgba(77, 141, 255, 0.14); }
 .dark .bg-red-50 { background-color: rgba(255, 97, 97, 0.14); }
-.dark .hover\:bg-gray-50:hover { background-color: var(--d-raised); }
+.dark .hover\:bg-gray-50:hover { background-color: rgba(255, 255, 255, 0.07); }
 .dark .hover\:bg-blue-50:hover { background-color: rgba(77, 141, 255, 0.14); }
 .dark .hover\:bg-red-50:hover { background-color: rgba(255, 97, 97, 0.14); }
-/* dropdown / popovers */
-.dark .shadow-xl { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65); }
-/* text */
-.dark .text-flipkart-dark, .dark .text-gray-900, .dark .text-gray-800, .dark .text-gray-700 { color: var(--d-text); }
-.dark .text-gray-600, .dark .text-gray-500, .dark .text-gray-400 { color: var(--d-muted); }
-.dark .section-title { color: #fff; letter-spacing: -0.01em; }
-.dark .hover\:text-flipkart-blue:hover { color: #7aa9ff; }
-.dark .text-flipkart-blue { color: #7aa9ff; }
-.dark header .text-flipkart-blue { color: #1e5fd6; }
-/* borders / dividers */
-.dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300, .dark .border-b, .dark .border-t { border-color: var(--d-line); }
-.dark .divider { background-color: var(--d-line); }
-/* inputs */
-.dark .input-field { background-color: var(--d-raised); border-color: rgba(255, 255, 255, 0.14); }
-.dark .input-field:focus { border-color: var(--d-accent); box-shadow: 0 0 0 3px rgba(77, 141, 255, 0.25); }
-.dark input, .dark textarea, .dark select { color: var(--d-text); }
+ 
+.dark input, .dark textarea, .dark select { color: var(--s-ink); }
 .dark input::placeholder, .dark textarea::placeholder { color: #7a879f; }
 .dark header input { background-color: #fff; color: #1b2433; }
 .dark header input::placeholder { color: #6b778c; }
-/* buttons */
-.dark .btn-primary {
-  background: linear-gradient(180deg, #4d8dff, #2f6ee6);
-  box-shadow: 0 8px 22px rgba(47, 110, 230, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-.dark .btn-primary:hover { box-shadow: 0 12px 30px rgba(47, 110, 230, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
-.dark .btn-secondary {
-  background: linear-gradient(180deg, #ff7d3b, #fb641b);
-  box-shadow: 0 8px 22px rgba(251, 100, 27, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-.dark .btn-outline { border-color: #4d8dff; color: #7aa9ff; }
-.dark .btn-outline:hover { background-color: #4d8dff; color: #fff; }
-.dark .bg-flipkart-blue:not(header) { background: linear-gradient(180deg, #4d8dff, #2f6ee6); }
-/* images: soften the white photo backgrounds, round them */
-.dark img { border-radius: 10px; }
-.dark .product-card img, .dark .card img { filter: brightness(0.94) contrast(1.03); }
-/* ratings, prices */
-.dark .star-empty { color: #475068; }
-.dark .text-green-600, .dark .text-flipkart-green { color: #4cd37b; }
-/* scrollbars */
+ 
+.dark .product-card img,
+.dark .card img { filter: brightness(0.94) contrast(1.03); }
+ 
 .dark ::-webkit-scrollbar { width: 10px; height: 8px; }
-.dark ::-webkit-scrollbar-track { background: var(--d-bg); }
+.dark ::-webkit-scrollbar-track { background: var(--s-base); }
 .dark ::-webkit-scrollbar-thumb { background: #2a3550; border-radius: 8px; }
 .dark ::-webkit-scrollbar-thumb:hover { background: #3a4a70; }
 .dark ::selection { background: rgba(77, 141, 255, 0.45); color: #fff; }
-@media (prefers-reduced-motion: reduce) {
-  .dark .card, .dark .product-card { transition: none; }
-  .dark .card:hover, .dark .product-card:hover { transform: none; }
+ 
+/* =====================================================================
+   FALLBACKS
+   ===================================================================== */
+@media (max-width: 640px) {
+  :root { --s-blur: 14px; }
 }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --s-glass: rgba(255, 255, 255, 0.92); --s-glass-hover: #fff; }
+  .dark { --s-glass: rgba(26, 34, 54, 0.95); --s-glass-hover: rgba(36, 46, 72, 0.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card, .product-card, .btn-primary, .btn-secondary, .btn-outline, .btn-white,
+  .product-card img, .product-card .product-image { transition: none; }
+  .product-card:hover, .btn-primary:hover, .btn-secondary:hover,
+  .btn-outline:hover, .btn-white:hover { transform: none; }
+  .skeleton { animation: none; }
+}
+ 

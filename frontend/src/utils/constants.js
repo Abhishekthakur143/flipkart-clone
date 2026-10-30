@@ -21,6 +21,16 @@ export const CATEGORIES = [
   { name: 'Grocery', icon: '🛒', slug: 'grocery' },
   { name: 'Toys', icon: '🧸', slug: 'toys' },
   { name: 'Books', icon: '📚', slug: 'books' },
+  { name: 'TV', icon: '📺', slug: 'tv' },
+  { name: 'Sports', icon: '⚽', slug: 'sports' },
+  { name: 'Gaming', icon: '🎮', slug: 'gaming' },
+  { name: 'Jewellery', icon: '💍', slug: 'jewellery' },
+  { name: 'Auto', icon: '🚗', slug: 'auto' },
+  { name: 'Health', icon: '💊', slug: 'health' },
+  { name: 'Pets', icon: '🐾', slug: 'pets' },
+  { name: 'Tools', icon: '🛠️', slug: 'tools' },
+  { name: 'Garden', icon: '🌱', slug: 'garden' },
+  { name: 'Music', icon: '🎵', slug: 'music' },
 ];
  
 // Banner: crop nahi hota (puri image aati hai), width 1200px, compressed (q=75, auto=format)

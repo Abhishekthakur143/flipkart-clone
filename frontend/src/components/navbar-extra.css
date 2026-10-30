@@ -1,0 +1,150 @@
+/* =========================================================
+   navbar-extra.css  (navbar.css ke BAAD import hota hai)
+   Header chota + category strip me premium animation.
+   navbar.css ko chheda nahi gaya, ye sirf upar se override karta hai.
+   ========================================================= */
+
+/* ================= HEADER: chota size ================= */
+header.nb .nb-row {
+  min-height: 0;
+  height: auto;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  gap: 14px;
+  transition: padding 0.3s ease;
+}
+
+/* logo */
+header.nb .nb-logo-mark { width: 28px; height: 28px; font-size: 14px; border-radius: 9px; }
+header.nb .nb-logo-name { font-size: 1.05rem; line-height: 1.1; }
+header.nb .nb-logo-sub { font-size: 0.62rem; line-height: 1.1; }
+
+/* search */
+header.nb .nb-search { max-width: 520px; }
+header.nb .nb-input { height: 36px; padding-top: 0; padding-bottom: 0; font-size: 0.85rem; }
+header.nb .nb-sbtn { width: 30px; height: 30px; }
+header.nb .nb-sbtn svg { width: 16px; height: 16px; }
+
+/* right side icons */
+header.nb .nb-icon { min-height: 36px; font-size: 0.82rem; transition: transform 0.2s ease, background 0.2s ease; }
+header.nb .nb-icon:hover { transform: translateY(-2px); }
+header.nb .nb-icon svg { width: 20px; height: 20px; }
+header.nb .nb-avatar { width: 26px; height: 26px; font-size: 0.78rem; }
+header.nb .nb-label { font-size: 0.8rem; }
+header.nb .nb-badge { min-width: 16px; height: 16px; font-size: 0.62rem; line-height: 16px; }
+header.nb .nb-login { padding-top: 6px; padding-bottom: 6px; font-size: 0.85rem; }
+
+/* scroll karne par aur thoda sikud jaye */
+header.nb.scrolled .nb-row { padding-top: 3px; padding-bottom: 3px; }
+
+/* ================= CATEGORY STRIP: chota + animation ================= */
+header.nb .nb-strip-in {
+  gap: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+header.nb .nb-strip .nb-cat {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  animation: nb-cat-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.25s ease, box-shadow 0.25s ease;
+}
+/* ek ke baad ek aate hain (stagger) */
+header.nb .nb-strip .nb-cat:nth-child(1) { animation-delay: 0.03s; }
+header.nb .nb-strip .nb-cat:nth-child(2) { animation-delay: 0.08s; }
+header.nb .nb-strip .nb-cat:nth-child(3) { animation-delay: 0.13s; }
+header.nb .nb-strip .nb-cat:nth-child(4) { animation-delay: 0.18s; }
+header.nb .nb-strip .nb-cat:nth-child(5) { animation-delay: 0.23s; }
+header.nb .nb-strip .nb-cat:nth-child(6) { animation-delay: 0.28s; }
+header.nb .nb-strip .nb-cat:nth-child(7) { animation-delay: 0.33s; }
+header.nb .nb-strip .nb-cat:nth-child(8) { animation-delay: 0.38s; }
+@keyframes nb-cat-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* emoji icon: hover par uchhalta hai */
+header.nb .nb-strip .nb-cat > span {
+  display: inline-block;
+  font-size: 0.95rem;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+header.nb .nb-strip .nb-cat:hover > span { transform: translateY(-2px) scale(1.25) rotate(-8deg); }
+
+/* neeche ki line: beech se phailti hai */
+header.nb .nb-strip .nb-cat::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: 1px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #ffb36b, #fb641b);
+  box-shadow: 0 0 10px rgba(251, 100, 27, 0.8);
+  transition: width 0.3s ease;
+}
+header.nb .nb-strip .nb-cat:hover::after { width: 58%; }
+
+/* glass pill + halki chamak */
+header.nb .nb-strip .nb-cat::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.0) 20%, rgba(255, 255, 255, 0.28) 50%, rgba(255, 255, 255, 0.0) 80%);
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  opacity: 0;
+}
+header.nb .nb-strip .nb-cat:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 20, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+header.nb .nb-strip .nb-cat:hover::before { opacity: 1; animation: nb-shine 0.8s ease; }
+@keyframes nb-shine {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+
+/* jo category abhi khuli hai */
+header.nb .nb-strip .nb-cat.active {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 20, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+header.nb .nb-strip .nb-cat.active::after { width: 58%; }
+
+/* scroll par strip aur chhoti */
+header.nb.scrolled .nb-strip .nb-cat { padding-top: 4px; padding-bottom: 4px; }
+
+/* focus (keyboard) */
+header.nb .nb-strip .nb-cat:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* ================= Mobile ================= */
+@media (max-width: 640px) {
+  header.nb .nb-row { gap: 8px; padding-top: 5px; padding-bottom: 5px; }
+  header.nb .nb-strip .nb-cat { padding: 5px 10px; font-size: 0.74rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header.nb .nb-strip .nb-cat,
+  header.nb .nb-strip .nb-cat > span,
+  header.nb .nb-strip .nb-cat::after,
+  header.nb .nb-icon { transition: none; animation: none; }
+  header.nb .nb-strip .nb-cat:hover::before { animation: none; }
+}

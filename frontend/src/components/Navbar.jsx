@@ -24,11 +24,13 @@ import './navbar.css';
 const CATEGORIES = [
   { name: 'Electronics', slug: 'electronics', icon: '🔌' },
   { name: 'Mobiles', slug: 'mobiles', icon: '📱' },
+  { name: 'Laptops', slug: 'laptops', icon: '💻' },
   { name: 'Fashion', slug: 'fashion', icon: '👕' },
   { name: 'Home & Furniture', slug: 'home', icon: '🏠' },
   { name: 'Appliances', slug: 'appliances', icon: '📺' },
   { name: 'Beauty', slug: 'beauty', icon: '💄' },
   { name: 'Grocery', slug: 'grocery', icon: '🛒' },
+  { name: 'Toys', slug: 'toys', icon: '🧸' },
   { name: 'Books', slug: 'books', icon: '📚' },
 ];
  
@@ -37,6 +39,7 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark');
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,8 +53,16 @@ const Navbar = () => {
   const activeCat = new URLSearchParams(location.search).get('category');
  
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    let lastY = window.scrollY;
+    const handleScroll = () => {
+      const y = window.scrollY;
+      setIsScrolled(y > 20);
+      // neeche scroll -> navbar chhup jaye, upar scroll -> wapas aa jaye
+      if (y > lastY && y > 90) setIsHidden(true);
+      else if (y < lastY) setIsHidden(false);
+      lastY = y;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
  
@@ -88,8 +99,11 @@ const Navbar = () => {
  
   const initial = user?.name?.trim()?.charAt(0)?.toUpperCase() || 'U';
  
+  // menu ya profile khula ho to navbar chhupta nahi
+  const hideNav = isHidden && !isMenuOpen && !isProfileOpen;
+ 
   return (
-    <header className={`nb ${isScrolled ? 'scrolled' : ''}`}>
+    <header className={`nb ${isScrolled ? 'scrolled' : ''} ${hideNav ? 'nb-hide' : ''}`}>
       {/* Top Navbar */}
       <div className="nb-wrap">
         <div className="nb-row">
@@ -280,3 +294,4 @@ const Navbar = () => {
 };
  
 export default Navbar;
+ 

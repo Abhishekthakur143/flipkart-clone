@@ -6,14 +6,14 @@ import { HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import { panelPath } from '../utils/panels';
 import { AuthShell, Field, Spinner } from '../components/AuthShell';
- 
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setBusy(true);
@@ -29,7 +29,7 @@ const Login = () => {
       dispatch(clearErrors());
     }
   };
- 
+
   return (
     <AuthShell
       heading="Welcome back"
@@ -59,5 +59,5 @@ const Login = () => {
     </AuthShell>
   );
 };
- 
+
 export default Login;

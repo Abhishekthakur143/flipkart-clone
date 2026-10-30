@@ -1,0 +1,357 @@
+/* =========================================================
+   home-extra.css  (home.css ke BAAD import hota hai)
+   Premium hero + dark-glass category band.
+   Baaki sab home.css wala hi rehta hai.
+   ========================================================= */
+ 
+/* ================= HERO ================= */
+/* page ke side-scroll se bachne ke liye */
+/* .hm par clip lagane se full-width banner kat jata tha, isliye page (body) par lagaya */
+body { overflow-x: clip; }
+ 
+/* banner: upar se chipka hua, poori screen ki chaudai, neeche ke kone gol */
+.hm .hm-hero-xl {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;             /* neeche ke sections jitni hi chaudai */
+  justify-self: center;
+  height: 300px;               /* mobile: image + text isi ke andar */
+  margin: 0 auto 34px;
+  border-radius: 30px;
+  background: #070d2b;
+  box-shadow: 0 40px 70px -34px rgba(20, 40, 140, 0.75);
+}
+.hm .hm-hero-xl .hm-track { display: flex; height: 100%; }
+.hm .hm-hero-xl .hm-slide { flex: 0 0 100%; min-width: 0; display: block; height: 100%; }
+.hm .hm-hero-xl .hm-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (min-width: 768px) {
+  .hm .hm-hero-xl { height: 540px; }   /* desktop */
+}
+ 
+/* gehra navy fade: left se + neeche se, taaki text aur glass bar saaf dikhen */
+.hm .hm-hero-xl::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(6, 12, 44, 0.9) 0%, rgba(6, 12, 44, 0.62) 36%, rgba(6, 12, 44, 0.08) 70%, rgba(6, 12, 44, 0) 100%),
+    linear-gradient(0deg, rgba(6, 12, 44, 0.78) 0%, rgba(6, 12, 44, 0) 34%);
+}
+ 
+/* ---- text ---- */
+.hm .hm-cap {
+  position: absolute;
+  z-index: 2;
+  left: clamp(20px, 4vw, 48px);
+  top: 44%;
+  transform: translateY(-50%);
+  max-width: min(560px, 88%);
+  max-height: 84%;
+  overflow: hidden;
+  color: #fff;
+  pointer-events: none;
+}
+.hm .hm-cap-title {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.3vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: #fff;
+  text-wrap: balance;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+.hm .hm-cap-text {
+  margin: 6px 0 0;
+  max-width: 340px;
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
+}
+.hm .hm-cap-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.hm .hm-cap-btn,
+.hm .hm-cap-btn2 {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  pointer-events: auto;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.hm .hm-cap-btn {
+  color: #fff;
+  background: linear-gradient(135deg, #ff8a3d, #fb641b);
+  box-shadow: 0 16px 32px -12px rgba(251, 100, 27, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.hm .hm-cap-btn:hover { transform: translateY(-2px); box-shadow: 0 22px 36px -12px rgba(251, 100, 27, 1), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+.hm .hm-cap-btn2 {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.hm .hm-cap-btn2:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.22); }
+.hm .hm-cap-btn:focus-visible,
+.hm .hm-cap-btn2:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+ 
+/* ---- neeche glass trust bar ---- */
+.hm .hm-trust {
+  position: absolute;
+  z-index: 2;
+  left: clamp(20px, 4vw, 48px);
+  bottom: 12px;
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  border-radius: 16px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+}
+.hm .hm-trust-i {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 4px 6px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.hm .hm-trust-i + .hm-trust-i { border-left: 1px solid rgba(255, 255, 255, 0.16); border-radius: 0 14px 14px 0; }
+.hm .hm-trust-i svg {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.hm .hm-trust-i small { display: block; font-size: 0.62rem; font-weight: 500; opacity: 0.75; }
+ 
+/* arrows + dots */
+.hm .hm-hero-xl .hm-arrow {
+  z-index: 3;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.hm .hm-hero-xl .hm-arrow { width: 34px; height: 34px; }
+.hm .hm-hero-xl .hm-arrow svg { width: 18px; height: 18px; }
+.hm .hm-hero-xl .hm-arrow:hover { background: rgba(255, 255, 255, 0.3); }
+.hm .hm-hero-xl .hm-dots {
+  z-index: 3;
+  left: auto;
+  right: clamp(22px, 4vw, 56px);
+  bottom: 16px;
+  transform: none;
+}
+ 
+/* ================= CATEGORY: dark glass band ================= */
+.hm .hm-sec.cats {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(20px, 3vw, 34px);
+  border: 0;
+  border-radius: 30px;
+  background:
+    radial-gradient(60% 90% at 0% 0%, rgba(180, 200, 255, 0.22) 0%, rgba(80, 110, 255, 0) 60%),
+    radial-gradient(50% 80% at 100% 100%, rgba(148, 163, 184, 0.14) 0%, rgba(251, 100, 27, 0) 60%),
+    linear-gradient(160deg, #070b16 0%, #101a33 55%, #1c2b52 100%);
+  box-shadow: 0 40px 70px -40px rgba(5, 10, 30, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.hm .hm-sec.cats .hm-title { color: #fff; }
+ 
+.hm .hm-cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+.hm .hm-cat {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 16px 16px;
+  border-radius: 22px;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+/* category ke rang ki glow, icon ke peeche */
+.hm .hm-cat::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -30px;
+  top: -30px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--c1) 0%, transparent 70%);
+  opacity: 0.3;
+  transition: opacity 0.3s ease, transform 0.4s ease;
+}
+.hm .hm-cat:hover {
+  transform: translateY(-6px);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 26px 40px -22px var(--c2);
+}
+.hm .hm-cat:hover::before { opacity: 0.6; transform: scale(1.25); }
+.hm .hm-cat:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+ 
+.hm .hm-cat-logo {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  font-size: 29px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--c1), var(--c2));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 14px 24px -10px var(--c2);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hm .hm-cat:hover .hm-cat-logo { transform: scale(1.08) rotate(-4deg); }
+.hm .hm-cat-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.hm .hm-cat-name {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+.hm .hm-cat-go {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 16px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.hm .hm-cat:hover .hm-cat-go { background: linear-gradient(135deg, #f1f5ff, #aebbd8); color: #0b1328; transform: translateX(3px); }
+ 
+/* ================= Tablet / Mobile ================= */
+@media (max-width: 900px) {
+  .hm .hm-trust { display: none; }
+  .hm .hm-cap { top: 48%; }
+  .hm .hm-hero-xl .hm-dots { bottom: 22px; }
+}
+@media (max-width: 767px) {
+  .hm .hm-cap-text { display: none; }
+}
+@media (max-width: 640px) {
+  .hm .hm-hero-xl { border-radius: 22px; margin-bottom: 22px; }
+  /* mobile image height ab upar wali 200px se aayegi (yahan se hata di) */
+  .hm .hm-cap { top: 46%; }
+  .hm .hm-cap-text { display: none; }
+  .hm .hm-cap-title { font-size: 1rem; }
+  .hm .hm-cap-actions { margin-top: 10px; gap: 8px; }
+  .hm .hm-cap-btn, .hm .hm-cap-btn2 { padding: 6px 12px; font-size: 0.72rem; }
+  .hm .hm-hero-xl .hm-dots { left: 50%; right: auto; transform: translateX(-50%); bottom: 16px; }
+ 
+  .hm .hm-sec.cats { border-radius: 22px; }
+  .hm .hm-cats {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 4px 2px 10px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .hm .hm-cats::-webkit-scrollbar { display: none; }
+  .hm .hm-cat { flex: 0 0 140px; scroll-snap-align: start; padding: 14px 13px 13px; gap: 12px; }
+  .hm .hm-cat-logo { width: 48px; height: 48px; font-size: 25px; border-radius: 15px; }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  .hm .hm-cap-btn, .hm .hm-cap-btn2, .hm .hm-cat, .hm .hm-cat::before, .hm .hm-cat-logo, .hm .hm-cat-go { transition: none; }
+}
+ 
+/* ================= PRODUCTS: premium hover (shine + lift) ================= */
+.hm .hm-pc {
+  position: relative;
+  min-width: 0;
+  border-radius: 18px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.35s ease;
+}
+.hm .hm-pc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(110deg, transparent 38%, rgba(255, 255, 255, 0.55) 49%, rgba(255, 255, 255, 0.12) 53%, transparent 64%);
+  background-size: 260% 100%;
+  background-position: 150% 0;
+}
+.hm .hm-pc:hover {
+  transform: translateY(-6px);
+  filter: drop-shadow(0 18px 22px rgba(40, 80, 240, 0.22));
+}
+.hm .hm-pc:hover::after { opacity: 1; animation: hm-shine 0.9s ease; }
+@keyframes hm-shine {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm .hm-pc { transition: none; }
+  .hm .hm-pc:hover::after { animation: none; }
+}
+ 
+/* ===== Category bar: 20 tiles = desktop par 10 + 10, tablet par 5 x 4 ===== */
+@media (min-width: 641px) and (max-width: 1299px) {
+  .hm .hm-cats { grid-template-columns: repeat(5, 1fr); }
+}
+@media (min-width: 1300px) {
+  .hm .hm-cats { grid-template-columns: repeat(10, 1fr); gap: 12px; }
+  .hm .hm-cat { padding: 14px 12px 12px; gap: 12px; }
+  .hm .hm-cat-logo { width: 48px; height: 48px; font-size: 25px; border-radius: 15px; }
+  .hm .hm-cat-row { display: block; }
+  .hm .hm-cat-name { font-size: 0.88rem; }
+  /* arrow tile ke kone me, taaki naam ko poori jagah mile */
+  .hm .hm-cat-go { position: absolute; top: 12px; right: 10px; width: 22px; height: 22px; font-size: 14px; }
+}
+ 
+/* ===== Naye 10 category tiles ke rang (11 se 20 number tak) ===== */
+.hm .hm-cats .hm-cat:nth-child(11) { --c1: #7fb0ff !important; --c2: #3a6fe0 !important; } /* tv */
+.hm .hm-cats .hm-cat:nth-child(12) { --c1: #6be0a8 !important; --c2: #18a36a !important; } /* sports */
+.hm .hm-cats .hm-cat:nth-child(13) { --c1: #b48cff !important; --c2: #6a3df0 !important; } /* gaming */
+.hm .hm-cats .hm-cat:nth-child(14) { --c1: #ffd36b !important; --c2: #e8a000 !important; } /* jewellery */
+.hm .hm-cats .hm-cat:nth-child(15) { --c1: #ff9a8b !important; --c2: #e8453a !important; } /* auto */
+.hm .hm-cats .hm-cat:nth-child(16) { --c1: #6edcff !important; --c2: #1f9bd8 !important; } /* health */
+.hm .hm-cats .hm-cat:nth-child(17) { --c1: #ffb48a !important; --c2: #e8742a !important; } /* pets */
+.hm .hm-cats .hm-cat:nth-child(18) { --c1: #9aa7ff !important; --c2: #4a4fe0 !important; } /* tools */
+.hm .hm-cats .hm-cat:nth-child(19) { --c1: #8de08a !important; --c2: #2f9e44 !important; } /* garden */
+.hm .hm-cats .hm-cat:nth-child(20) { --c1: #ff8ad0 !important; --c2: #c2379b !important; } /* music */
+ 

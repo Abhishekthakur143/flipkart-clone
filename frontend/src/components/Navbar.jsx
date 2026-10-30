@@ -14,11 +14,13 @@ import {
   HiOutlineCog,
   HiOutlineMoon,
   HiOutlineSun,
+  HiOutlineViewGrid,
 } from 'react-icons/hi';
 import { logout } from '../redux/slices/authSlice';
 import { selectCartItemCount } from '../redux/slices/cartSlice';
+import PanelLink from './PanelLink';
 import './navbar.css';
-
+ 
 const CATEGORIES = [
   { name: 'Electronics', slug: 'electronics', icon: '🔌' },
   { name: 'Mobiles', slug: 'mobiles', icon: '📱' },
@@ -29,7 +31,7 @@ const CATEGORIES = [
   { name: 'Grocery', slug: 'grocery', icon: '🛒' },
   { name: 'Books', slug: 'books', icon: '📚' },
 ];
-
+ 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -40,19 +42,19 @@ const Navbar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const profileRef = useRef(null);
-
+ 
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const cartItemCount = useSelector(selectCartItemCount);
   const { wishlistItems } = useSelector((state) => state.wishlist);
-
+ 
   const activeCat = new URLSearchParams(location.search).get('category');
-
+ 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
+ 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -62,7 +64,7 @@ const Navbar = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
+ 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -70,22 +72,22 @@ const Navbar = () => {
       setSearchQuery('');
     }
   };
-
+ 
   const handleLogout = () => {
     dispatch(logout());
     setIsProfileOpen(false);
     navigate('/');
   };
-
+ 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDark);
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }, [isDark]);
-
+ 
   const toggleDarkMode = () => setIsDark((d) => !d);
-
+ 
   const initial = user?.name?.trim()?.charAt(0)?.toUpperCase() || 'U';
-
+ 
   return (
     <header className={`nb ${isScrolled ? 'scrolled' : ''}`}>
       {/* Top Navbar */}
@@ -101,7 +103,7 @@ const Navbar = () => {
               </span>
             </span>
           </Link>
-
+ 
           {/* Search Bar (desktop) */}
           <div className="nb-search">
             <form onSubmit={handleSearch}>
@@ -117,19 +119,19 @@ const Navbar = () => {
               </button>
             </form>
           </div>
-
+ 
           {/* Action Buttons */}
           <div className="nb-actions">
             {/* Mobile Search Toggle */}
             <button className="nb-icon nb-sm" onClick={() => navigate('/search')} aria-label="Search">
               <HiOutlineSearch />
             </button>
-
+ 
             {/* Dark Mode Toggle */}
             <button onClick={toggleDarkMode} className="nb-icon" aria-label="Toggle dark mode">
               {isDark ? <HiOutlineSun /> : <HiOutlineMoon />}
             </button>
-
+ 
             {/* Profile / Login */}
             <div className="nb-profile" ref={profileRef}>
               {isAuthenticated ? (
@@ -140,7 +142,7 @@ const Navbar = () => {
               ) : (
                 <Link to="/login" className="nb-login">Login</Link>
               )}
-
+ 
               {/* Profile Dropdown */}
               <AnimatePresence>
                 {isProfileOpen && isAuthenticated && (
@@ -167,14 +169,13 @@ const Navbar = () => {
                     <Link to="/wishlist" onClick={() => setIsProfileOpen(false)} className="nb-dd-item">
                       <HiOutlineHeart /> Wishlist
                     </Link>
+                    {/* Admin / Manager / Super Admin / Seller ko unka panel (Settings ke upar) */}
+                    <PanelLink onClick={() => setIsProfileOpen(false)} className="nb-dd-item admin">
+                      <HiOutlineViewGrid />
+                    </PanelLink>
                     <Link to="/profile" onClick={() => setIsProfileOpen(false)} className="nb-dd-item">
                       <HiOutlineCog /> Settings
                     </Link>
-                    {user?.role === 'admin' && (
-                      <Link to="/admin" onClick={() => setIsProfileOpen(false)} className="nb-dd-item admin">
-                        <HiOutlineCog /> Admin Dashboard
-                      </Link>
-                    )}
                     <div className="nb-dd-sep" />
                     <button onClick={handleLogout} className="nb-dd-item danger">
                       <HiOutlineLogout /> Logout
@@ -183,20 +184,20 @@ const Navbar = () => {
                 )}
               </AnimatePresence>
             </div>
-
+ 
             {/* Wishlist */}
             <Link to="/wishlist" className="nb-icon nb-md" aria-label="Wishlist">
               <HiOutlineHeart />
               {wishlistItems?.length > 0 && <span className="nb-badge">{wishlistItems.length}</span>}
             </Link>
-
+ 
             {/* Cart */}
             <Link to="/cart" className="nb-icon" aria-label="Cart">
               <HiOutlineShoppingCart />
               {cartItemCount > 0 && <span className="nb-badge">{cartItemCount}</span>}
               <span className="nb-label">Cart</span>
             </Link>
-
+ 
             {/* Mobile Menu Toggle */}
             <button className="nb-icon nb-sm" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Menu">
               {isMenuOpen ? <HiOutlineX /> : <HiOutlineMenu />}
@@ -204,7 +205,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
+ 
       {/* Mobile Search Bar */}
       <div className="nb-msearch">
         <form onSubmit={handleSearch}>
@@ -220,7 +221,7 @@ const Navbar = () => {
           </button>
         </form>
       </div>
-
+ 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
@@ -233,6 +234,7 @@ const Navbar = () => {
             <div style={{ padding: '6px 0' }}>
               {isAuthenticated ? (
                 <>
+                  <PanelLink onClick={() => setIsMenuOpen(false)} />
                   <Link to="/profile" onClick={() => setIsMenuOpen(false)}>My Profile</Link>
                   <Link to="/orders" onClick={() => setIsMenuOpen(false)}>My Orders</Link>
                   <Link to="/wishlist" onClick={() => setIsMenuOpen(false)}>Wishlist</Link>
@@ -255,7 +257,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
+ 
       {/* Category Strip */}
       <div className="nb-strip">
         <div className="nb-wrap">
@@ -276,5 +278,5 @@ const Navbar = () => {
     </header>
   );
 };
-
+ 
 export default Navbar;

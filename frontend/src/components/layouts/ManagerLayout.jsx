@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useDispatch, useSelector } from 'react-redux';
 import {
   HiOutlineHome, HiOutlineClipboardList, HiOutlineUserAdd, HiOutlineLogout, HiOutlineMenu,
-  HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft, HiOutlineUsers, HiOutlineTag,
+  HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft, HiOutlineUsers, HiOutlineTag, HiOutlineShieldCheck,
 } from 'react-icons/hi';
 import { logout } from '../../redux/slices/authSlice';
 import API from '../../utils/api';
@@ -88,6 +88,7 @@ const ManagerLayout = () => {
             ))}
           </nav>
           <div className="adm-side-foot">
+            {user?.role === 'superadmin' && <Link to="/superadmin" className="adm-link"><HiOutlineShieldCheck /> Super admin</Link>}
             <Link to="/" className="adm-link"><HiOutlineArrowLeft /> Back to store</Link>
             <button type="button" className="adm-link" style={{ width: '100%', background: 'none', border: 0, cursor: 'pointer' }} onClick={doLogout}>
               <HiOutlineLogout /> Logout

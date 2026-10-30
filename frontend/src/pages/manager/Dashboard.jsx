@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
@@ -6,14 +6,15 @@ import {
   HiOutlineTruck, HiOutlineCheckCircle, HiOutlineRefresh,
 } from 'react-icons/hi';
 import API from '../../utils/api';
+import StatDetail from '../../components/StatDetail';
 import { formatPrice } from '../../utils/constants';
 import '../../components/admin/admin.css';
 import './manager.css';
-
+ 
 const code = (o) => `#${o._id.slice(-8).toUpperCase()}`;
 const when = (d) => new Date(d).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
 const FILTERS = [['all', 'All'], ['low', 'Low stock'], ['out', 'Out of stock']];
-
+ 
 const OrderRows = ({ list, empty, showPartner }) =>
   list.length === 0 ? <p className="adm-muted">{empty}</p> : (
     <>
@@ -33,13 +34,15 @@ const OrderRows = ({ list, empty, showPartner }) =>
       ))}
     </>
   );
-
+ 
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
   const [q, setQ] = useState('');
-
+  const stockRef = useRef(null);
+  const [detail, setDetail] = useState(null); // 'products' | 'stock'
+ 
   const load = async () => {
     setError('');
     try {
@@ -52,7 +55,7 @@ const Dashboard = () => {
     }
   };
   useEffect(() => { load(); }, []);
-
+ 
   const limit = data?.lowStockLimit || 5;
   const shown = useMemo(() => {
     if (!data) return [];
@@ -63,7 +66,7 @@ const Dashboard = () => {
       return !t || p.name.toLowerCase().includes(t) || p.category.toLowerCase().includes(t);
     });
   }, [data, filter, q, limit]);
-
+ 
   if (error && !data) {
     return (
       <div className="adm-card adm-pad">
@@ -74,17 +77,17 @@ const Dashboard = () => {
     );
   }
   if (!data) return <div className="adm-spin-wrap"><div className="adm-spin" /></div>;
-
+ 
   const s = data.stats;
   const cards = [
-    { t: 'Total Products', v: s.totalProducts, i: HiOutlineShoppingBag, tone: 't-purple' },
-    { t: 'Units in Stock', v: s.totalStock, i: HiOutlineCube, tone: 't-blue', sub: `${s.outOfStock} out · ${s.lowStock} low` },
+    { t: 'Total Products', v: s.totalProducts, i: HiOutlineShoppingBag, tone: 't-purple', sub: 'Poori list dekhne ke liye dabao', act: () => setDetail('products') },
+    { t: 'Units in Stock', v: s.totalStock, i: HiOutlineCube, tone: 't-blue', sub: `${s.outOfStock} out · ${s.lowStock} low`, act: () => setDetail('stock') },
     { t: 'Pending Orders', v: s.pendingOrders, i: HiOutlineClock, tone: 't-yellow', sub: 'Confirm karna baaki', to: '/manager/orders?tab=new' },
     { t: 'Ready to Assign', v: s.readyToAssign, i: HiOutlineClipboardCheck, tone: 't-orange', sub: 'Delivery boy chahiye', to: '/manager/orders?tab=ready' },
     { t: 'Delivery Orders', v: s.deliveryOrders, i: HiOutlineTruck, tone: 't-teal', sub: 'Delivery boy ke paas', to: '/manager/orders?tab=moving' },
     { t: 'Delivered', v: s.deliveredOrders, i: HiOutlineCheckCircle, tone: 't-green', to: '/manager/orders?tab=done' },
   ];
-
+ 
   return (
     <div className="adm-stack">
       <div className="adm-head" style={{ marginBottom: 0 }}>
@@ -94,7 +97,7 @@ const Dashboard = () => {
         </div>
         <button className="adm-btn ghost" onClick={load}><HiOutlineRefresh /> Refresh</button>
       </div>
-
+ 
       <div className="adm-stats">
         {cards.map((c) => {
           const body = (
@@ -103,13 +106,17 @@ const Dashboard = () => {
               <span><small>{c.t}</small><b>{c.v}</b>{c.sub && <small style={{ marginTop: 2, fontSize: 12 }}>{c.sub}</small>}</span>
             </>
           );
-          return c.to
-            ? <Link key={c.t} to={c.to} className="adm-stat" style={{ textDecoration: 'none' }}>{body}</Link>
-            : <div key={c.t} className="adm-stat" style={{ cursor: 'default' }}>{body}</div>;
+          if (c.to) return <Link key={c.t} to={c.to} className="adm-stat" style={{ textDecoration: 'none' }}>{body}</Link>;
+          return (
+            <div key={c.t} className="adm-stat" style={{ cursor: 'pointer' }} role="button" tabIndex={0}
+              onClick={c.act} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), c.act())}>
+              {body}
+            </div>
+          );
         })}
       </div>
-
-      <div className="adm-card">
+ 
+      <div className="adm-card" ref={stockRef} style={{ scrollMarginTop: 80 }}>
         <div className="adm-card-head">
           <h2>Stock per product</h2>
           <input className="adm-input adm-search" style={{ height: 40 }} placeholder="Search product or category"
@@ -155,7 +162,7 @@ const Dashboard = () => {
           {shown.length === 0 && <div className="adm-empty">{data.products.length === 0 ? 'Abhi koi product nahi hai.' : 'Koi product match nahi hua.'}</div>}
         </div>
       </div>
-
+ 
       <div className="mg-two">
         <div className="adm-card adm-pad">
           <div className="adm-card-head" style={{ padding: '0 0 14px' }}>
@@ -170,8 +177,21 @@ const Dashboard = () => {
           <OrderRows list={data.delivery} empty="Abhi koi order delivery boy ke paas nahi hai." showPartner />
         </div>
       </div>
+ 
+      {detail === 'products' && (
+        <StatDetail title="Total products" note="Store me jitne products hain unki list." onClose={() => setDetail(null)}
+          cols={['Product', 'Category', 'Price', 'Sold', 'Stock']}
+          rows={data.products.map((p) => [p.name, p.category || '—', formatPrice(p.price), p.totalSold || 0, Math.max(p.stock, 0)])}
+          foot={['Total', `${data.products.length} products`, '', '', s.totalStock]} empty="Abhi koi product nahi hai." />
+      )}
+      {detail === 'stock' && (
+        <StatDetail title="Units in stock" note={`Kam stock wale pehle (${limit} ya kam = low). ${s.outOfStock} out of stock, ${s.lowStock} low.`} onClose={() => setDetail(null)}
+          cols={['Product', 'Category', 'Status', 'Stock left']}
+          rows={[...data.products].sort((a, b) => a.stock - b.stock).map((p) => [p.name, p.category || '—', p.stock <= 0 ? 'Out of stock' : p.stock <= limit ? 'Low' : 'OK', Math.max(p.stock, 0)])}
+          foot={['Total', '', '', s.totalStock]} empty="Abhi koi product nahi hai." />
+      )}
     </div>
   );
 };
-
+ 
 export default Dashboard;

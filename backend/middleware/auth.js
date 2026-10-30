@@ -69,40 +69,60 @@ exports.isAuthenticated = async (req, res, next) => {
   }
 };
 
-// Sirf role check (admin hona chahiye). Unlock page ke apne routes ke liye.
+// Admin panel ke roles: admin aur superadmin (superadmin ke paas admin ka poora access hai)
+const ADMIN_ROLES = ['admin', 'superadmin'];
+const isStaffAdmin = (u) => !!u && ADMIN_ROLES.includes(u.role);
+const disabled = (res) =>
+  res.status(403).json({ success: false, message: 'Your account is disabled. Contact the super admin.' });
+const locked = (res) =>
+  res.status(403).json({
+    success: false,
+    code: 'ADMIN_LOCKED',
+    message: 'Admin panel is locked. Verify your identity to continue.',
+  });
+
+// Sirf role check (admin ya superadmin). Unlock page ke apne routes ke liye.
 exports.isAdminRole = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
-    next();
-  } else {
-    return res.status(403).json({
-      success: false,
-      message: 'Access denied. Admin only.',
-    });
+  if (!isStaffAdmin(req.user)) {
+    return res.status(403).json({ success: false, message: 'Access denied. Admin only.' });
   }
+  if (req.user.isActive === false) return disabled(res);
+  next();
 };
 
 // Admin + panel unlocked. Saare admin routes isi se guard hain,
 // isliye baaki route files badalne ki zaroorat nahi.
 exports.isAdmin = (req, res, next) => {
-  if (!req.user || req.user.role !== 'admin') {
+  if (!isStaffAdmin(req.user)) {
     return res.status(403).json({
       success: false,
       message: 'Access denied. Admin only.',
     });
   }
-  if (securityEnabled() && !hasValidUnlock(req)) {
-    return res.status(403).json({
-      success: false,
-      code: 'ADMIN_LOCKED',
-      message: 'Admin panel is locked. Verify your identity to continue.',
-    });
+  if (req.user.isActive === false) return disabled(res);
+  if (securityEnabled() && !hasValidUnlock(req)) return locked(res);
+  next();
+};
+
+// Sirf superadmin (+ unlock gate)
+exports.isSuperAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== 'superadmin') {
+    return res.status(403).json({ success: false, message: 'Access denied. Super admin only.' });
   }
+  if (req.user.isActive === false) return disabled(res);
+  if (securityEnabled() && !hasValidUnlock(req)) return locked(res);
   next();
 };
 
 // Manager panel: sirf role 'manager' (aur account active). Admin yahan nahi aata,
 // kyunki manager ka dashboard sirf manager ka hai.
 exports.isManager = (req, res, next) => {
+  // Superadmin manager panel dekh sakta hai, par sirf unlock gate ke baad
+  if (req.user && req.user.role === 'superadmin') {
+    if (req.user.isActive === false) return disabled(res);
+    if (securityEnabled() && !hasValidUnlock(req)) return locked(res);
+    return next();
+  }
   if (!req.user || req.user.role !== 'manager') {
     return res.status(403).json({ success: false, message: 'Access denied. Manager only.' });
   }

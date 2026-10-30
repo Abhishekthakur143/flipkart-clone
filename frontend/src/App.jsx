@@ -49,6 +49,13 @@ const ManagerLayout = lazy(() => import('./components/layouts/ManagerLayout'));
 const ManagerDashboard = lazy(() => import('./pages/manager/Dashboard'));
 const ManagerOrders = lazy(() => import('./pages/manager/Orders'));
 const ManagerPartnerRequests = lazy(() => import('./pages/manager/PartnerRequests'));
+// Super admin panel (sirf role 'superadmin')
+const SuperAdminLayout = lazy(() => import('./components/layouts/SuperAdminLayout'));
+const SuperOverview = lazy(() => import('./pages/superadmin/Overview'));
+const SuperAccounts = lazy(() => import('./pages/superadmin/Accounts'));
+const SuperSellers = lazy(() => import('./pages/superadmin/Sellers'));
+const SuperActivity = lazy(() => import('./pages/superadmin/Activity'));
+const SuperDeliveryPartners = lazy(() => import('./pages/superadmin/DeliveryPartners'));
 const ManagerSellers = lazy(() => import('./pages/manager/Sellers'));
 const ManagerDeals = lazy(() => import('./pages/manager/Deals'));
 
@@ -138,15 +145,8 @@ function App() {
             <Route path="/delivery/register" element={<Navigate to="/delivery/login" replace />} />
             <Route path="/delivery" element={<DeliveryDashboard />} />
  
-            {/* Admin Routes (sirf admin) */}
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute isAdmin>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }
-            >
+            {/* Admin Routes (admin + superadmin, role check AdminLayout ke andar hai) */}
+            <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="product/new" element={<AdminProductForm />} />
@@ -168,6 +168,15 @@ function App() {
               <Route path="partner-requests" element={<ManagerPartnerRequests />} />
               <Route path="sellers" element={<ManagerSellers />} />
               <Route path="deals" element={<ManagerDeals />} />
+            </Route>
+
+            {/* Super admin (sirf superadmin + security gate) */}
+            <Route path="/superadmin" element={<SuperAdminLayout />}>
+              <Route index element={<SuperOverview />} />
+              <Route path="accounts" element={<SuperAccounts />} />
+              <Route path="sellers" element={<SuperSellers />} />
+              <Route path="activity" element={<SuperActivity />} />
+              <Route path="delivery-partners" element={<SuperDeliveryPartners />} />
             </Route>
 
             {/* Seller: password set link (public) + panel (sirf seller) */}

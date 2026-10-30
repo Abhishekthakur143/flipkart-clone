@@ -10,6 +10,7 @@ import { dv, errMsg, tokenStore } from './deliveryApi';
 import { useDvTheme } from './ui';
 import { Overview, OrdersSection, EarningsSection, ProfileSection } from './Sections';
 import OrderDrawer from './OrderDrawer';
+import ViewAsBar from './ViewAsBar';
 import './delivery.css';
 
 const NAV = [
@@ -71,6 +72,7 @@ const DeliveryDashboard = () => {
 
   return (
     <div className="dv-root" data-theme={theme}>
+      <ViewAsBar />
       <div className="dv-shell">
         <aside className="dv-side">
           <div className="dv-logo"><i>★</i> Flipkart Delivery</div>

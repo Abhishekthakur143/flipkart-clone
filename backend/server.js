@@ -5,6 +5,9 @@ const fileUpload = require('express-fileupload');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorMiddleware = require('./middleware/error');
+const activityLogger = require('./middleware/activityLogger');
+const superAdminGuard = require('./middleware/superAdminGuard');
+const { isAuthenticated } = require('./middleware/auth');
 
 // Load environment variables
 dotenv.config({ path: './.env' });
@@ -66,6 +69,9 @@ app.use(async (req, res, next) => {
   }
 });
 
+// Activity log: kisne kya kiya (sirf admin/manager/seller/superadmin ke badlaav wale kaam)
+app.use(activityLogger);
+
 // Routes
 app.use('/api/v1/auth', require('./routes/authRoutes'));
 app.use('/api/v1/products', require('./routes/productRoutes'));
@@ -75,14 +81,13 @@ app.use('/api/v1/coupons', require('./routes/couponRoutes'));
 app.use('/api/otp', require('./routes/otpRoutes'));
 app.use('/api/v1/payment', require('./routes/paymentRoutes'));
 app.use('/api/v1/wishlist', require('./routes/wishlistRoutes'));
-app.use('/api/v1/admin', require('./routes/adminRoutes'));
+app.use('/api/v1/admin', isAuthenticated, superAdminGuard, require('./routes/adminRoutes'));
+app.use('/api/v1/superadmin', require('./routes/superAdminRoutes'));
 app.use('/api/v1/manager', require('./routes/managerRoutes'));
 app.use('/api/v1/partner-requests', require('./routes/partnerRequestRoutes'));
 app.use('/api/v1/seller', require('./routes/sellerRoutes'));
 app.use('/api/v1/deals', require('./routes/dealRoutes'));
 app.use('/api/v1/otp', require('./routes/otpRoutes'));
-app.use('/api/v1/seller', require('./routes/sellerRoutes'));
-app.use('/api/v1/deals', require('./routes/dealRoutes'));
 // Delivery partner dashboard
 app.use('/api/v1/delivery', require('./routes/deliveryRoutes'));
 

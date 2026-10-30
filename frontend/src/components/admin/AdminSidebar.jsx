@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   HiOutlineHome,
   HiOutlineShoppingBag,
@@ -16,7 +17,7 @@ import {
 } from 'react-icons/hi';
 import API from '../../utils/api';
 import './admin.css';
-
+ 
 const menuItems = [
   { name: 'Dashboard', path: '/admin', icon: HiOutlineHome },
   { name: 'Products', path: '/admin/products', icon: HiOutlineShoppingBag },
@@ -27,18 +28,20 @@ const menuItems = [
   { name: 'Delivery Partners', path: '/admin/delivery-partners', icon: HiOutlineUserGroup },
   { name: 'Coupons', path: '/admin/coupons', icon: HiOutlineTicket },
 ];
-
+ 
 const ACTIVE = ['Assigned', 'Picked Up', 'Out for Delivery'];
-
+ 
 const AdminSidebar = ({ open = false, onClose = () => {} }) => {
   const location = useLocation();
   const path = location.pathname;
-
+  const { user } = useSelector((state) => state.auth);
+  const isSuper = user?.role === 'superadmin';
+ 
   // Delivery menu: hidden until the admin has CONFIRMED at least one order
   const [ready, setReady] = useState(0);   // confirmed, waiting for a delivery partner
   const [moving, setMoving] = useState(0); // already with a delivery partner
   const [approvals, setApprovals] = useState({ partners: 0, deals: 0 }); // manager ne bheje, admin ke yes/no baaki
-
+ 
   const loadCounts = useCallback(async () => {
     try {
       const { data } = await API.get('/orders/admin/all');
@@ -67,7 +70,7 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
       /* keep the previous state */
     }
   }, []);
-
+ 
   // refresh on page change, when the tab regains focus, and every 20s
   useEffect(() => { loadCounts(); }, [loadCounts, path]);
   useEffect(() => {
@@ -75,21 +78,21 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
     window.addEventListener('focus', loadCounts);
     return () => { clearInterval(t); window.removeEventListener('focus', loadCounts); };
   }, [loadCounts]);
-
+ 
   const showDelivery = ready + moving > 0 || path.startsWith('/admin/deliveries');
-
+ 
   // Product edit/new page par bhi "Products" highlight rahe
   const isActive = (p) =>
     p === '/admin'
       ? path === '/admin'
       : path.startsWith(p) || (p === '/admin/products' && path.startsWith('/admin/product/'));
-
+ 
   // Approvals Dashboard ke just neeche (Phase 3 me product deals bhi yahin aayengi)
   const all = [menuItems[0], { name: 'Approvals', path: '/admin/approvals', icon: HiOutlineBadgeCheck, badge: approvals.partners + approvals.deals }, ...menuItems.slice(1)];
   const items = showDelivery
     ? [...all.slice(0, 4), { name: 'Deliveries', path: '/admin/deliveries', icon: HiOutlineTruck, badge: ready }, ...all.slice(4)]
     : all;
-
+ 
   return (
     <>
       {open && <div className="adm-side-overlay" onClick={onClose} />}
@@ -109,7 +112,7 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
             <HiOutlineX />
           </button>
         </Link>
-
+ 
         <nav className="adm-nav">
           <div className="adm-nav-label">MANAGE</div>
           {items.map((item) => (
@@ -135,16 +138,24 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
             </Link>
           ))}
         </nav>
-
+ 
         <div className="adm-side-foot">
-          <Link to="/" className="adm-link" onClick={onClose}>
-            <HiOutlineArrowLeft />
-            Back to store
-          </Link>
+          {isSuper ? (
+            <Link to="/superadmin" className="adm-link" onClick={onClose}>
+              <HiOutlineArrowLeft />
+              Back to Super admin
+            </Link>
+          ) : (
+            <Link to="/" className="adm-link" onClick={onClose}>
+              <HiOutlineArrowLeft />
+              Back to store
+            </Link>
+          )}
         </div>
       </aside>
     </>
   );
 };
-
+ 
 export default AdminSidebar;
+ 

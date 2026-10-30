@@ -4,15 +4,16 @@ import { useDispatch } from 'react-redux';
 import { login, clearErrors } from '../redux/slices/authSlice';
 import { HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
 import toast from 'react-hot-toast';
+import { panelPath } from '../utils/panels';
 import { AuthShell, Field, Spinner } from '../components/AuthShell';
-
+ 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setBusy(true);
@@ -22,13 +23,13 @@ const Login = () => {
       toast.success('Login Successful');
       // Manager ko seedha apne panel me bhejo
       const role = result.payload?.user?.role;
-      navigate(role === 'manager' ? '/manager' : role === 'seller' ? '/seller' : '/');
+      navigate(panelPath(role));
     } else {
       toast.error(result.payload || 'Login failed');
       dispatch(clearErrors());
     }
   };
-
+ 
   return (
     <AuthShell
       heading="Welcome back"
@@ -58,5 +59,5 @@ const Login = () => {
     </AuthShell>
   );
 };
-
+ 
 export default Login;

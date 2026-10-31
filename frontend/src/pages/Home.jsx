@@ -25,10 +25,22 @@ import {
   MdMenuBook,
   MdTv,
   MdCategory,
+  MdSportsSoccer,
+  MdSportsEsports,
+  MdStars,
+  MdDirectionsCar,
+  MdLocalPharmacy,
+  MdPets,
+  MdBuild,
+  MdLocalFlorist,
+  MdMusicNote,
 } from 'react-icons/md';
 import './home.css';
 import './home-extra.css';
- 
+
+// Ek section me kitne products dikhane hain (Trending aur Featured)
+const SECTION_LIMIT = 10;
+
 // Category slug -> logo + tile colours. Unknown slug falls back to the generic icon.
 const CAT_LOGOS = {
   mobiles: { Icon: MdSmartphone, from: '#6d8bff', to: '#3d5af1' },
@@ -42,9 +54,51 @@ const CAT_LOGOS = {
   toys: { Icon: MdToys, from: '#ffd36b', to: '#f0a000' },
   books: { Icon: MdMenuBook, from: '#c3a2ff', to: '#8250e0' },
   tv: { Icon: MdTv, from: '#7fb0ff', to: '#3a6fe0' },
+  sports: { Icon: MdSportsSoccer, from: '#6be0a8', to: '#18a36a' },
+  gaming: { Icon: MdSportsEsports, from: '#b48cff', to: '#6a3df0' },
+  jewellery: { Icon: MdStars, from: '#ffd36b', to: '#e8a000' },
+  auto: { Icon: MdDirectionsCar, from: '#ff9a8b', to: '#e8453a' },
+  health: { Icon: MdLocalPharmacy, from: '#6edcff', to: '#1f9bd8' },
+  pets: { Icon: MdPets, from: '#ffb48a', to: '#e8742a' },
+  tools: { Icon: MdBuild, from: '#a5b8d8', to: '#5f7396' },
+  garden: { Icon: MdLocalFlorist, from: '#8de08a', to: '#2f9e44' },
+  music: { Icon: MdMusicNote, from: '#ff8ad0', to: '#c2379b' },
 };
 const FALLBACK_LOGO = { Icon: MdCategory, from: '#a5b0c8', to: '#6a7691' };
- 
+
+// Extra categories: total 20 tak (desktop par 10 + 10 ki do poori lines).
+// Ye CATEGORIES me pehle se na hon tabhi jodi jati hain.
+const EXTRA_CATEGORIES = [
+  { name: 'TV', slug: 'tv' },
+  { name: 'Sports', slug: 'sports' },
+  { name: 'Gaming', slug: 'gaming' },
+  { name: 'Jewellery', slug: 'jewellery' },
+  { name: 'Auto', slug: 'auto' },
+  { name: 'Health', slug: 'health' },
+  { name: 'Pets', slug: 'pets' },
+  { name: 'Tools', slug: 'tools' },
+  { name: 'Garden', slug: 'garden' },
+  { name: 'Music', slug: 'music' },
+];
+const TOTAL_CATEGORIES = 20;
+const buildCategories = () => {
+  const list = [...CATEGORIES];
+  const target = Math.max(TOTAL_CATEGORIES, list.length);
+  for (const extra of EXTRA_CATEGORIES) {
+    if (list.length >= target) break;
+    if (!list.some((c) => c.slug === extra.slug)) list.push(extra);
+  }
+  return list;
+};
+const ALL_CATEGORIES = buildCategories();
+
+// ProductCard ko hover-shine wrapper me lapetta hai
+const GlowCard = ({ product, index }) => (
+  <div className="hm-pc">
+    <ProductCard product={product} index={index} />
+  </div>
+);
+
 const Section = ({ title, to, tone = '', children }) => (
   <motion.section
     className={`hm-sec ${tone}`}
@@ -64,31 +118,31 @@ const Section = ({ title, to, tone = '', children }) => (
     {children}
   </motion.section>
 );
- 
+
 const Home = () => {
   const dispatch = useDispatch();
   const { featuredProducts, trendingProducts, flashDeals } = useSelector((state) => state.products);
   const [currentBanner, setCurrentBanner] = useState(0);
- 
+
   useEffect(() => {
     dispatch(fetchFeaturedProducts());
     dispatch(fetchTrendingProducts());
     dispatch(fetchFlashDeals());
   }, [dispatch]);
- 
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentBanner((prev) => (prev + 1) % BANNERS.length);
     }, 4000);
     return () => clearInterval(timer);
   }, []);
- 
+
   const nextBanner = () => setCurrentBanner((prev) => (prev + 1) % BANNERS.length);
   const prevBanner = () => setCurrentBanner((prev) => (prev - 1 + BANNERS.length) % BANNERS.length);
- 
+
   return (
     <div className="hm">
-      {/* Hero: aadhi screen ka bada banner + upar likhi line */}
+      {/* Hero: banner ki height CSS (home-extra.css) se aati hai */}
       <div className="hm-hero hm-hero-xl">
         <motion.div
           animate={{ x: `-${currentBanner * 100}%` }}
@@ -101,7 +155,7 @@ const Home = () => {
             </Link>
           ))}
         </motion.div>
- 
+
         <motion.div
           className="hm-cap"
           initial={{ opacity: 0, y: 18 }}
@@ -123,7 +177,7 @@ const Home = () => {
             </Link>
           </div>
         </motion.div>
- 
+
         <div className="hm-trust">
           <div className="hm-trust-i">
             <HiOutlineTruck />
@@ -147,7 +201,7 @@ const Home = () => {
             </span>
           </div>
         </div>
- 
+
         <button onClick={prevBanner} className="hm-arrow hm-prev" aria-label="Previous banner">
           <HiOutlineChevronLeft />
         </button>
@@ -165,11 +219,11 @@ const Home = () => {
           ))}
         </div>
       </div>
- 
+
       {/* Categories Section */}
       <Section title="Shop By Category" tone="cats">
         <div className="hm-cats">
-          {CATEGORIES.map((cat) => {
+          {ALL_CATEGORIES.map((cat) => {
             const { Icon, from, to } = CAT_LOGOS[cat.slug] || FALLBACK_LOGO;
             return (
               <Link
@@ -192,38 +246,37 @@ const Home = () => {
           })}
         </div>
       </Section>
- 
+
       {/* Flash Deals */}
       {flashDeals.length > 0 && (
         <Section title="🔥 Flash Deals" to="/products?deal=flash" tone="flash">
           <div className="hm-grid c6">
             {flashDeals.slice(0, 6).map((product, i) => (
-              <ProductCard key={product._id} product={product} index={i} />
+              <GlowCard key={product._id} product={product} index={i} />
             ))}
           </div>
         </Section>
       )}
- 
+
       {/* Trending Products */}
       <Section title="Trending Now" to="/products?sort=-totalSold">
         <div className="hm-grid c5">
-          {trendingProducts.slice(0, 5).map((product, i) => (
-            <ProductCard key={product._id} product={product} index={i} />
+          {trendingProducts.slice(0, SECTION_LIMIT).map((product, i) => (
+            <GlowCard key={product._id} product={product} index={i} />
           ))}
         </div>
       </Section>
- 
+
       {/* Featured Products */}
       <Section title="Featured Products" to="/products">
         <div className="hm-grid c4">
-          {featuredProducts.map((product, i) => (
-            <ProductCard key={product._id} product={product} index={i} />
+          {featuredProducts.slice(0, SECTION_LIMIT).map((product, i) => (
+            <GlowCard key={product._id} product={product} index={i} />
           ))}
         </div>
       </Section>
     </div>
   );
 };
- 
+
 export default Home;
- 

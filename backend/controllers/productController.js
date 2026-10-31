@@ -149,8 +149,6 @@ exports.getProductDetails = async (req, res, next) => {
 };
  
 // Admin: Create Product
- 
-  // Admin: Create Product
 exports.createProduct = async (req, res, next) => {
   try {
     // Data types ko ensure karein (String na jaye)
@@ -167,7 +165,7 @@ exports.createProduct = async (req, res, next) => {
     }
  
     const imagesLinks = [];
-    
+ 
     // Agar user ne image upload ki hai
     if (images.length > 0) {
       for (let i = 0; i < images.length; i++) {
@@ -200,8 +198,7 @@ exports.createProduct = async (req, res, next) => {
       req.body.highlights = [];
     }
  
- 
-    // ✅ SPECIFICATIONS KO SAFE BANAANA (YE ADD KAREIN)
+    // ✅ SPECIFICATIONS KO SAFE BANAANA
     if (typeof req.body.specifications === 'string' || !req.body.specifications) {
       req.body.specifications = []; // Agar string ya empty hai, toh khali array bhej do
     }
@@ -213,13 +210,14 @@ exports.createProduct = async (req, res, next) => {
       product,
       message: 'Product created successfully',
     });
-    } catch (error) {
+  } catch (error) {
     // 🔥 YE LINE ASLI ERROR TERMINAL MEIN LAAYEGI
     console.log("=== PRODUCT CREATION ERROR ===", error);
-    
+ 
     return next(new ErrorHandler(error.message || 'Product creation failed', 500));
   }
 };
+ 
 // Admin: Update Product
 exports.updateProduct = async (req, res, next) => {
   try {
@@ -470,12 +468,30 @@ exports.deleteReview = async (req, res, next) => {
   }
 };
  
+// ---------- Home page sections (Featured / Trending) ----------
+const SECTION_LIMIT = 10;
+ 
+// Flag wale products kam hon to baaki active products se SECTION_LIMIT tak bhar do (duplicate nahi)
+const fillUp = async (flagged, sort) => {
+  if (flagged.length >= SECTION_LIMIT) return flagged;
+  const extra = await Product.find({
+    isActive: true,
+    ...(priceCondition() || {}),
+    _id: { $nin: flagged.map((p) => p._id) },
+  })
+    .populate('category', 'name slug')
+    .sort(sort)
+    .limit(SECTION_LIMIT - flagged.length);
+  return [...flagged, ...extra];
+};
+ 
 // Get Featured Products
 exports.getFeaturedProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isFeatured: true, isActive: true, ...(priceCondition() || {}) })
+    const flagged = await Product.find({ isFeatured: true, isActive: true, ...(priceCondition() || {}) })
       .populate('category', 'name slug')
-      .limit(8);
+      .limit(SECTION_LIMIT);
+    const products = await fillUp(flagged, { createdAt: -1 });
  
     res.status(200).json({
       success: true,
@@ -489,10 +505,11 @@ exports.getFeaturedProducts = async (req, res, next) => {
 // Get Trending Products
 exports.getTrendingProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isTrending: true, isActive: true, ...(priceCondition() || {}) })
+    const flagged = await Product.find({ isTrending: true, isActive: true, ...(priceCondition() || {}) })
       .populate('category', 'name slug')
       .sort({ totalSold: -1 })
-      .limit(10);
+      .limit(SECTION_LIMIT);
+    const products = await fillUp(flagged, { totalSold: -1 });
  
     res.status(200).json({
       success: true,
@@ -538,3 +555,4 @@ exports.getAdminProducts = async (req, res, next) => {
     next(error);
   }
 };
+ 

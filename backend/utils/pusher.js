@@ -5,9 +5,17 @@ const MANAGERS = 'private-deals-managers';
 const sellerChannel = (id) => `private-deals-seller-${id}`;
 
 let client = null;
+let warned = false;
 const getPusher = () => {
   const { PUSHER_APP_ID, PUSHER_KEY, PUSHER_SECRET, PUSHER_CLUSTER } = process.env;
-  if (!PUSHER_APP_ID || !PUSHER_KEY || !PUSHER_SECRET || !PUSHER_CLUSTER) return null;
+  if (!PUSHER_APP_ID || !PUSHER_KEY || !PUSHER_SECRET || !PUSHER_CLUSTER) {
+    // Vercel logs me dikhega, taaki missing env chhupa na rahe
+    if (!warned) {
+      console.warn('Pusher env missing on server: realtime is OFF');
+      warned = true;
+    }
+    return null;
+  }
   if (!client) {
     client = new Pusher({
       appId: PUSHER_APP_ID, key: PUSHER_KEY, secret: PUSHER_SECRET, cluster: PUSHER_CLUSTER, useTLS: true,

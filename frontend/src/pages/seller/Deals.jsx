@@ -8,12 +8,13 @@ import { compressImage } from '../../utils/imageCompress';
 import Thread from '../../components/deals/Thread';
 import '../../components/admin/admin.css';
 import '../../components/deals/deals.css';
-
+import { useRealtime } from '../../utils/realtime';
+ 
 const msg = (e, f = 'Something went wrong') => e?.response?.data?.message || f;
 const LABEL = { Proposed: 'Manager ka jawab baaki', Countered: 'Aapka jawab baaki', Agreed: 'Rate tay, manager aage bhej raha hai', PendingAdmin: 'Admin ke approval me', Approved: 'Live in store', Rejected: 'Admin ne approve nahi kiya', Closed: 'Closed' };
 const TONE = { Proposed: 'warn', Countered: 'purple', Agreed: 'info', PendingAdmin: 'info', Approved: 'ok', Rejected: 'bad', Closed: 'gray' };
 const EMPTY = { productName: '', category: '', brand: '', description: '', highlights: '', quantity: '', askPrice: '', costPrice: '', note: '' };
-
+ 
 const Deals = () => {
   const { profile } = useOutletContext();
   const verified = profile.status === 'Verified';
@@ -25,20 +26,23 @@ const Deals = () => {
   const [images, setImages] = useState([]);
   const [busy, setBusy] = useState('');
   const [counter, setCounter] = useState({}); // dealId -> { open, price, note }
-
+  const [channel, setChannel] = useState(null); // Pusher channel (server batata hai)
+ 
   const load = useCallback(async () => {
     try {
       const { data } = await API.get('/deals/seller');
       setDeals(data.deals || []);
+      setChannel(data.channel || null);
     } catch (e) { toast.error(msg(e, 'Deals load nahi hue')); }
     setLoading(false);
   }, []);
   useEffect(() => { load(); }, [load]);
+  useRealtime(channel, 'deal-updated', load);
   useEffect(() => {
     if (!adding || cats.length) return;
     API.get('/seller/categories').then((r) => setCats(r.data.categories || [])).catch(() => toast.error('Categories load nahi hui'));
   }, [adding, cats.length]);
-
+ 
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const onImages = async (e) => {
     try {
@@ -49,7 +53,7 @@ const Deals = () => {
     } catch (err) { toast.error(err.message); }
     e.target.value = '';
   };
-
+ 
   const create = async (e) => {
     e.preventDefault();
     setBusy('create');
@@ -61,7 +65,7 @@ const Deals = () => {
     } catch (err) { toast.error(msg(err)); }
     setBusy('');
   };
-
+ 
   const act = async (deal, kind, body = {}) => {
     setBusy(deal._id + kind);
     try {
@@ -73,7 +77,7 @@ const Deals = () => {
     setBusy('');
   };
   const lastManager = (d) => [...d.events].reverse().find((e) => e.by === 'manager' && e.price != null);
-
+ 
   return (
     <div>
       <div className="adm-head">
@@ -86,9 +90,9 @@ const Deals = () => {
           <button className="adm-btn" disabled={!verified} onClick={() => setAdding(true)}><HiOutlinePlus /> New item</button>
         </div>
       </div>
-
+ 
       {!verified && <div className="dl-banner warn" role="status"><div><b>Pehle verification poori karo</b>Item tabhi bhej sakte ho jab manager aapki shop verify kar de. <Link to="/seller/verification" style={{ fontWeight: 700 }}>Verification →</Link></div></div>}
-
+ 
       {loading ? <div className="adm-spin-wrap" style={{ minHeight: 200 }}><div className="adm-spin" /></div>
         : deals.length === 0 ? <div className="adm-card"><div className="adm-empty">Abhi koi item nahi bheja. “New item” se shuru karo.</div></div>
         : (
@@ -108,7 +112,7 @@ const Deals = () => {
                   <span className={`adm-badge ${TONE[d.status]}`}>{LABEL[d.status]}</span>
                   {d.agreedPrice != null && <div className="dl-money"><div><small>AGREED RATE</small><b>{formatPrice(d.agreedPrice)}</b></div><div><small>TOTAL FOR {d.quantity}</small><b>{formatPrice(d.agreedPrice * d.quantity)}</b></div></div>}
                   <Thread events={d.events} viewer="seller" />
-
+ 
                   {d.status === 'Countered' && offer && (
                     <>
                       <div className="dl-actions">
@@ -135,7 +139,7 @@ const Deals = () => {
             })}
           </div>
         )}
-
+ 
       {adding && (
         <div className="adm-modal-back" onClick={() => !busy && setAdding(false)}>
           <div className="adm-modal dl-modal-wide" role="dialog" aria-label="New item" onClick={(e) => e.stopPropagation()}>
@@ -166,5 +170,6 @@ const Deals = () => {
     </div>
   );
 };
-
+ 
 export default Deals;
+ 

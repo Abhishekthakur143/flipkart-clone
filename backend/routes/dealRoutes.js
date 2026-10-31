@@ -1,9 +1,10 @@
 const express = require('express');
 const { isAuthenticated, isAdmin, isManager, isSeller } = require('../middleware/auth');
 const c = require('../controllers/dealController');
-
+const { authChannel } = require('../utils/pusher');
 const router = express.Router();
 
+router.post('/pusher/auth', isAuthenticated, authChannel);
 // Seller
 router.get('/seller', isAuthenticated, isSeller, c.sellerList);
 router.get('/seller/count', isAuthenticated, isSeller, c.sellerCount);

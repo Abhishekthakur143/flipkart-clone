@@ -53,5 +53,7 @@ const schema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+const { notifyDeal } = require('../utils/pusher');
+schema.post('save', async function (doc) { await notifyDeal(doc); });
 
 module.exports = mongoose.model('Deal', schema);

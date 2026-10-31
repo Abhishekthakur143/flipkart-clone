@@ -6,6 +6,7 @@ import { formatPrice } from '../../utils/constants';
 import Thread from '../../components/deals/Thread';
 import '../../components/admin/admin.css';
 import '../../components/deals/deals.css';
+import { useRealtime } from '../../utils/realtime';
 
 const msg = (e, f = 'Something went wrong') => e?.response?.data?.message || f;
 const TABS = [
@@ -35,6 +36,9 @@ const Deals = () => {
     finally { setLoading(false); }
   }, []);
   useEffect(() => { load(); }, [load]);
+  useRealtime('private-deals-managers', 'deal-updated', load);
+// modal khula ho to uska thread bhi turant naya dikhe
+useEffect(() => { setOpen((o) => (o ? deals.find((d) => d._id === o._id) || o : o)); }, [deals]);
 
   const rows = (k) => deals.filter((d) => TABS.find((t) => t.k === k).s.includes(d.status));
   const openDeal = (d) => { setOpen(d); setPrice(''); setNote(''); setSell(d.sellingPrice || ''); setMrp(d.cuttedPrice || ''); };

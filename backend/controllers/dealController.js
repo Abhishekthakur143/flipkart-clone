@@ -6,6 +6,7 @@ const User = require('../models/User');
 const ErrorHandler = require('../utils/errorHandler');
 const sendEmail = require('../utils/sendEmail');
 const { _uploadImage } = require('./sellerController');
+const { sellerChannel } = require('../utils/pusher'); 
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const tryMail = async (o) => { try { await sendEmail(o); return true; } catch (e) { console.error('Deal mail failed:', e.message); return false; } };
@@ -77,7 +78,7 @@ const notifySeller = async (deal, subject, body) => {
 exports.sellerList = async (req, res, next) => {
   try {
     const deals = await Deal.find({ seller: req.user._id }).sort({ createdAt: -1 });
-    res.json({ success: true, deals: deals.map(sellerView) });
+    res.json({ success: true, deals: deals.map(sellerView), channel: sellerChannel(req.user._id) });
   } catch (e) { next(e); }
 };
 exports.sellerCount = async (req, res, next) => {

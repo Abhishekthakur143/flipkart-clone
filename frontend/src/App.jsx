@@ -43,12 +43,16 @@ const AdminDeliveries = lazy(() => import('./pages/admin/Deliveries'));
 const AdminDeliveryPartners = lazy(() => import('./pages/admin/DeliveryPartners'));
 const AdminManagers = lazy(() => import('./pages/admin/Managers'));
 const AdminApprovals = lazy(() => import('./pages/admin/Approvals'));
+const AdminAnalytics = lazy(() => import('./pages/admin/Analytics'));
+const AdminRewards = lazy(() => import('./pages/admin/Rewards'));
+const AdminMyRewards = lazy(() => import('./pages/admin/MyRewards'));
 
 // Manager panel (admin banata hai, sirf role 'manager')
 const ManagerLayout = lazy(() => import('./components/layouts/ManagerLayout'));
 const ManagerDashboard = lazy(() => import('./pages/manager/Dashboard'));
 const ManagerOrders = lazy(() => import('./pages/manager/Orders'));
 const ManagerPartnerRequests = lazy(() => import('./pages/manager/PartnerRequests'));
+const ManagerRewards = lazy(() => import('./pages/manager/Rewards'));
 // Super admin panel (sirf role 'superadmin')
 const SuperAdminLayout = lazy(() => import('./components/layouts/SuperAdminLayout'));
 const SuperOverview = lazy(() => import('./pages/superadmin/Overview'));
@@ -58,14 +62,17 @@ const SuperActivity = lazy(() => import('./pages/superadmin/Activity'));
 const SuperDeliveryPartners = lazy(() => import('./pages/superadmin/DeliveryPartners'));
 const ManagerSellers = lazy(() => import('./pages/manager/Sellers'));
 const ManagerDeals = lazy(() => import('./pages/manager/Deals'));
+   const SuperAnalytics = lazy(() => import('./pages/superadmin/Analytics'));
 
 // Seller panel (manager access deta hai, sirf role 'seller')
 const SellerLayout = lazy(() => import('./components/layouts/SellerLayout'));
 const SellerDashboard = lazy(() => import('./pages/seller/Dashboard'));
 const SellerVerification = lazy(() => import('./pages/seller/Verification'));
 const SellerDeals = lazy(() => import('./pages/seller/Deals'));
+const SellerRewards = lazy(() => import('./pages/seller/Rewards'));
 const BecomeSeller = lazy(() => import('./pages/seller/BecomeSeller'));
 const SellerSetupPassword = lazy(() => import('./pages/seller/SetupPassword'));
+const SuperRewards = lazy(() => import('./pages/superadmin/Rewards'));
  
 // Components
 import Loading from './components/Loading';
@@ -159,6 +166,9 @@ function App() {
               <Route path="delivery-partners" element={<AdminDeliveryPartners />} />
               <Route path="managers" element={<AdminManagers />} />
               <Route path="approvals" element={<AdminApprovals />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+              <Route path="rewards" element={<AdminRewards />} />
+              <Route path="my-rewards" element={<AdminMyRewards />} />
             </Route>
 
             {/* Manager Routes (sirf manager) */}
@@ -168,6 +178,7 @@ function App() {
               <Route path="partner-requests" element={<ManagerPartnerRequests />} />
               <Route path="sellers" element={<ManagerSellers />} />
               <Route path="deals" element={<ManagerDeals />} />
+              <Route path="rewards" element={<ManagerRewards />} />
             </Route>
 
             {/* Super admin (sirf superadmin + security gate) */}
@@ -177,6 +188,8 @@ function App() {
               <Route path="sellers" element={<SuperSellers />} />
               <Route path="activity" element={<SuperActivity />} />
               <Route path="delivery-partners" element={<SuperDeliveryPartners />} />
+              <Route path="analytics" element={<SuperAnalytics />} />
+              <Route path="rewards" element={<SuperRewards />} />
             </Route>
 
             {/* Seller: password set link (public) + panel (sirf seller) */}
@@ -186,6 +199,7 @@ function App() {
               <Route index element={<SellerDashboard />} />
               <Route path="verification" element={<SellerVerification />} />
               <Route path="deals" element={<SellerDeals />} />
+              <Route path="rewards" element={<SellerRewards />} />
             </Route>
           </Routes>
         </AnimatePresence>
@@ -195,4 +209,3 @@ function App() {
 }
  
 export default App;
- 

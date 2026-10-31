@@ -14,6 +14,8 @@ import {
   HiOutlineTruck,
   HiOutlineArrowLeft,
   HiOutlineX,
+  HiOutlineChartBar,
+  HiOutlineGift,
 } from 'react-icons/hi';
 import API from '../../utils/api';
 import './admin.css';
@@ -27,6 +29,9 @@ const menuItems = [
   { name: 'Managers', path: '/admin/managers', icon: HiOutlineBriefcase },
   { name: 'Delivery Partners', path: '/admin/delivery-partners', icon: HiOutlineUserGroup },
   { name: 'Coupons', path: '/admin/coupons', icon: HiOutlineTicket },
+  { name: 'Analytics', path: '/admin/analytics', icon: HiOutlineChartBar },
+  { name: 'Rewards', path: '/admin/rewards', icon: HiOutlineGift },
+  { name: 'My rewards', path: '/admin/my-rewards', icon: HiOutlineGift },
 ];
  
 const ACTIVE = ['Assigned', 'Picked Up', 'Out for Delivery'];
@@ -158,4 +163,3 @@ const AdminSidebar = ({ open = false, onClose = () => {} }) => {
 };
  
 export default AdminSidebar;
- 

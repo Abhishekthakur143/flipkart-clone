@@ -101,6 +101,9 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Kis manager ne order confirm kiya (analytics ke liye)
+    confirmedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+
     // ---- Delivery partner workflow (added) ----
     delivery: {
       partner: { type: mongoose.Schema.Types.ObjectId, ref: 'DeliveryPartner', index: true },

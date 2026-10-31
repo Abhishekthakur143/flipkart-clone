@@ -1,5 +1,6 @@
 const express = require('express');
 const c = require('../controllers/deliveryController');
+const { mine } = require('../controllers/rewardController');
 const { isDeliveryPartner } = require('../middleware/deliveryAuth');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
@@ -31,6 +32,7 @@ router.put('/me', c.updateMe);
 router.put('/password', c.updatePassword);
 router.put('/availability', c.setAvailability);
 router.get('/stats', c.stats);
+router.get('/rewards', mine); // partner ke apne gifts aur targets
 router.get('/orders', c.listOrders);
 router.get('/orders/:id', c.getOrder);
 router.put('/orders/:id/pickup', c.pickup);

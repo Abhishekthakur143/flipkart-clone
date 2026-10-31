@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useDispatch, useSelector } from 'react-redux';
 import {
   HiOutlineHome, HiOutlineShieldCheck, HiOutlineCollection, HiOutlineLogout, HiOutlineMenu,
-  HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft,
+  HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft, HiOutlineGift,
 } from 'react-icons/hi';
 import { logout } from '../../redux/slices/authSlice';
 import API from '../../utils/api';
@@ -51,6 +51,7 @@ const SellerLayout = () => {
     { name: 'Dashboard', path: '/seller', icon: HiOutlineHome, end: true },
     { name: 'Verification', path: '/seller/verification', icon: HiOutlineShieldCheck, dot: status && status !== 'Verified' },
     { name: 'My items & deals', path: '/seller/deals', icon: HiOutlineCollection, badge: waiting },
+    { name: 'My rewards', path: '/seller/rewards', icon: HiOutlineGift },
   ];
 
   return (

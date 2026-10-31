@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   HiOutlineHome, HiOutlineUsers, HiOutlineShoppingBag, HiOutlineClipboardList, HiOutlineLogout, HiOutlineMenu,
   HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft, HiOutlineShieldCheck, HiOutlineLockClosed,
-  HiOutlineBriefcase, HiOutlineCog, HiOutlineTruck, HiOutlineUserGroup,
+  HiOutlineBriefcase, HiOutlineCog, HiOutlineTruck, HiOutlineUserGroup, HiOutlineChartBar, HiOutlineGift,
 } from 'react-icons/hi';
 import { logout } from '../../redux/slices/authSlice';
 import StaffRoute from '../StaffRoute';
@@ -15,8 +15,10 @@ import '../../pages/manager/manager.css';
 
 const OWN = [
   { name: 'Overview', path: '/superadmin', icon: HiOutlineHome, end: true },
+  { name: 'Analytics', path: '/superadmin/analytics', icon: HiOutlineChartBar },
   { name: 'Accounts', path: '/superadmin/accounts', icon: HiOutlineUsers },
   { name: 'Sellers', path: '/superadmin/sellers', icon: HiOutlineShoppingBag },
+  { name: 'Rewards', path: '/superadmin/rewards', icon: HiOutlineGift },
   { name: 'Activity log', path: '/superadmin/activity', icon: HiOutlineClipboardList },
   { name: 'Partner app', path: '/superadmin/delivery-partners', icon: HiOutlineTruck },
 ];
@@ -25,6 +27,7 @@ const PANELS = [
   { name: 'Manager panel', path: '/manager', icon: HiOutlineBriefcase },
   { name: 'Deliveries', path: '/admin/deliveries', icon: HiOutlineTruck },
   { name: 'Delivery partners', path: '/admin/delivery-partners', icon: HiOutlineUserGroup },
+  { name: 'Rewards & gifts', path: '/admin/rewards', icon: HiOutlineGift },
 ];
 
 const SuperAdminLayout = () => {

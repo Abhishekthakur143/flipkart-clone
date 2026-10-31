@@ -2,6 +2,7 @@ const express = require('express');
 const { isAuthenticated, isManager, isSeller } = require('../middleware/auth');
 const c = require('../controllers/sellerController');
 const r = require('../controllers/sellerRequestController');
+const { mine } = require('../controllers/rewardController');
 
 const router = express.Router();
 
@@ -30,5 +31,6 @@ router.get('/me', isAuthenticated, isSeller, c.me);
 router.put('/profile', isAuthenticated, isSeller, c.submitProfile);
 router.get('/categories', isAuthenticated, isSeller, c.categories);
 router.get('/dashboard', isAuthenticated, isSeller, c.dashboard);
+router.get('/rewards', isAuthenticated, isSeller, mine); // seller ke apne gifts aur targets
 
 module.exports = router;

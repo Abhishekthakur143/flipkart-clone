@@ -109,6 +109,7 @@ exports.confirmOrder = async (req, res, next) => {
       return next(new ErrorHandler(`Only new orders can be confirmed (this one is ${order.orderStatus})`, 400));
     }
     order.orderStatus = 'Confirmed';
+    order.confirmedBy = req.user._id; // analytics: kis manager ne confirm kiya
     order.trackingUpdates.push({
       status: 'Confirmed',
       message: 'Order has been confirmed by the store manager',

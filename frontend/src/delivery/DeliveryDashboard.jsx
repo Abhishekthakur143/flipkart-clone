@@ -4,11 +4,12 @@ import { AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
   HiOutlineViewGrid, HiOutlineClipboardList, HiOutlineCash, HiOutlineUser, HiOutlineLogout,
-  HiOutlineMoon, HiOutlineSun, HiOutlineRefresh,
+  HiOutlineMoon, HiOutlineSun, HiOutlineRefresh, HiOutlineGift,
 } from 'react-icons/hi';
 import { dv, errMsg, tokenStore } from './deliveryApi';
 import { useDvTheme } from './ui';
 import { Overview, OrdersSection, EarningsSection, ProfileSection } from './Sections';
+import RewardsSection from './RewardsSection';
 import OrderDrawer from './OrderDrawer';
 import ViewAsBar from './ViewAsBar';
 import './delivery.css';
@@ -17,6 +18,7 @@ const NAV = [
   { id: 'overview', label: 'Overview', icon: HiOutlineViewGrid, title: 'Dashboard' },
   { id: 'orders', label: 'My Orders', icon: HiOutlineClipboardList, title: 'My Orders' },
   { id: 'earnings', label: 'Earnings', icon: HiOutlineCash, title: 'Earnings' },
+  { id: 'rewards', label: 'Rewards', icon: HiOutlineGift, title: 'Rewards' },
   { id: 'profile', label: 'Profile', icon: HiOutlineUser, title: 'Profile' },
 ];
 
@@ -116,6 +118,7 @@ const DeliveryDashboard = () => {
             )}
             {tab === 'orders' && <OrdersSection active={active} completed={completed} loading={loading} onOpen={setOpenId} />}
             {tab === 'earnings' && <EarningsSection stats={stats} completed={completed} loading={loading} />}
+            {tab === 'rewards' && <RewardsSection />}
             {tab === 'profile' && partner && <ProfileSection partner={partner} onSaved={setPartner} />}
           </main>
         </div>

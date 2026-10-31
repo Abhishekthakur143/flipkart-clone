@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import API from '../utils/api';
 
@@ -46,4 +47,5 @@ export const dv = {
   resendOtp: (id) => D.post(`/orders/${id}/resend-otp`).then((r) => r.data),
   deliver: (id, otp) => D.put(`/orders/${id}/deliver`, { otp }).then((r) => r.data),
   fail: (id, reason) => D.put(`/orders/${id}/fail`, { reason }).then((r) => r.data),
+  rewards: () => D.get('/rewards').then((r) => r.data),
 };

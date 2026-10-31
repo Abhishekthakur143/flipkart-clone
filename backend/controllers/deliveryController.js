@@ -4,6 +4,7 @@ const DeliveryPartner = require('../models/DeliveryPartner');
 const Order = require('../models/Order');
 const ErrorHandler = require('../utils/errorHandler');
 const sendEmail = require('../utils/sendEmail');
+const { runRulesThrottled } = require('./rewardController');
  
 const ACTIVE = ['Assigned', 'Picked Up', 'Out for Delivery'];
 const DONE = ['Delivered', 'Failed'];
@@ -362,6 +363,15 @@ exports.deliver = async (req, res, next) => {
     }
     track(order, 'Delivered', 'Order has been delivered', order.shippingInfo.city);
     await order.save();
+ 
+    // Auto rewards: delivery ke baad targets check karo (2 min me max ek baar).
+    // Fail ho to bhi delivery ka response kharab nahi hona chahiye.
+    try {
+      await runRulesThrottled();
+    } catch (e) {
+      console.error('Reward run failed:', e.message);
+    }
+ 
     res.json({ success: true, order: shape(order), message: 'Delivered! Great job.' });
   } catch (e) {
     next(e);

@@ -3,6 +3,7 @@ const { isAuthenticated, isManager } = require('../middleware/auth');
 const { dashboard, listOrders, confirmOrder } = require('../controllers/managerController');
 // Delivery boy ki list aur assign ka logic pehle se bana hai, wahi use hota hai
 const { listPartners, assignOrder } = require('../controllers/deliveryController');
+const { mine } = require('../controllers/rewardController');
 
 const router = express.Router();
 router.use(isAuthenticated, isManager);
@@ -12,5 +13,6 @@ router.get('/orders', listOrders);
 router.put('/orders/:id/confirm', confirmOrder);
 router.get('/partners', listPartners);
 router.put('/assign/:orderId', assignOrder);
+router.get('/rewards', mine); // manager ke apne gifts aur targets
 
 module.exports = router;

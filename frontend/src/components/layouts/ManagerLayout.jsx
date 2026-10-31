@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   HiOutlineHome, HiOutlineClipboardList, HiOutlineUserAdd, HiOutlineLogout, HiOutlineMenu,
   HiOutlineMoon, HiOutlineSun, HiOutlineX, HiOutlineArrowLeft, HiOutlineUsers, HiOutlineTag, HiOutlineShieldCheck,
+  HiOutlineGift,
 } from 'react-icons/hi';
 import { logout } from '../../redux/slices/authSlice';
 import API from '../../utils/api';
@@ -18,6 +19,7 @@ const MENU = [
   { name: 'Partner requests', path: '/manager/partner-requests', icon: HiOutlineUserAdd, badge: 'requests' },
   { name: 'Sellers', path: '/manager/sellers', icon: HiOutlineUsers, badge: 'sellers' },
   { name: 'Seller deals', path: '/manager/deals', icon: HiOutlineTag, badge: 'deals' },
+  { name: 'My rewards', path: '/manager/rewards', icon: HiOutlineGift },
 ];
 
 const ManagerLayout = () => {

@@ -5,7 +5,8 @@ import API from '../../utils/api';
 import toast from 'react-hot-toast';
 import '../../components/admin/admin.css';
 
-const badgeTone = (role) => (role === 'admin' ? 'purple' : role === 'manager' ? 'warn' : 'info');
+const badgeTone = (role) =>
+  role === 'admin' || role === 'superadmin' ? 'purple' : role === 'manager' ? 'warn' : 'info';
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Users = () => {
       toast.success('User role updated');
       dispatch(fetchAdminUsers());
     } catch (error) {
-      toast.error('Failed to update role');
+      toast.error(error.response?.data?.message || 'Failed to update role');
     }
   };
 
@@ -68,7 +69,10 @@ const Users = () => {
                   <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td><span className={`adm-badge ${badgeTone(user.role)}`}>{user.role}</span></td>
                   <td>
-                    {user._id === me?._id ? (
+                    {user.role === 'superadmin' ? (
+                      // Super admin yahan se change nahi hota (button hi nahi)
+                      <span className="adm-muted">Protected</span>
+                    ) : user._id === me?._id ? (
                       <span className="adm-muted">You</span>
                     ) : user.role === 'manager' || user.role === 'seller' ? (
                       // Manager/seller ka role yahan se nahi badalta (Managers page se manage hota hai)

@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -6,6 +7,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorMiddleware = require('./middleware/error');
 const activityLogger = require('./middleware/activityLogger');
+const lockSuperAdmin = require('./middleware/lockSuperAdmin');
 const superAdminGuard = require('./middleware/superAdminGuard');
 const { isAuthenticated } = require('./middleware/auth');
 
@@ -72,6 +74,10 @@ app.use(async (req, res, next) => {
 // Activity log: kisne kya kiya (sirf admin/manager/seller/superadmin ke badlaav wale kaam)
 app.use(activityLogger);
 
+// Super admin ko Users page / purane user-edit routes se koi change na kar sake
+app.use('/api/v1/auth/admin', lockSuperAdmin);
+app.use('/api/v1/admin', lockSuperAdmin);
+
 // Routes
 app.use('/api/v1/auth', require('./routes/authRoutes'));
 app.use('/api/v1/products', require('./routes/productRoutes'));
@@ -119,3 +125,4 @@ if (!process.env.VERCEL) {
 }
 
 module.exports = app;
+ 
